@@ -700,7 +700,7 @@ public abstract class VSGenericTarget : ITarget
             ps.WriteLine($"      <DesignTime>True</DesignTime>");
             ps.WriteLine($"      <AutoGen>{node.AutoGenerate}</AutoGen>");
             ps.WriteLine($"      <DependentUpon>{node.Name}</DependentUpon>");
-            ps.WriteLine($"    </None>");
+            ps.WriteLine($"    </Compile>");
             ps.WriteLine($"  </ItemGroup>");
         }
     }
