@@ -73,7 +73,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
-[assembly: AssemblyVersion("2.2.0.0")]
+[assembly: AssemblyVersion("2.0.8.0")]
 
 //
 // Version information for an assembly consists of the following four values:
