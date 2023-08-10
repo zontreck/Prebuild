@@ -694,8 +694,9 @@ public abstract class VSGenericTarget : ITarget
             ps.WriteLine("  <ItemGroup>");
             ps.WriteLine($"    <None Update=\"{node.Name}\">");
             ps.WriteLine($"      <Generator>{node.Generator}</Generator>");
+            ps.WriteLine($"      <LastGenOutput>{node.OutputName}</LastGenOutput>");
             ps.WriteLine($"    </None>");
-            ps.WriteLine($"    <None Update=\"{node.OutputName}\">");
+            ps.WriteLine($"    <Compile Update=\"{node.OutputName}\">");
             ps.WriteLine($"      <DesignTime>True</DesignTime>");
             ps.WriteLine($"      <AutoGen>{node.AutoGenerate}</AutoGen>");
             ps.WriteLine($"      <DependentUpon>{node.Name}</DependentUpon>");
