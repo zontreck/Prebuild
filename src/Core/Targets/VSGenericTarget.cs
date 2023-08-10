@@ -692,7 +692,7 @@ public abstract class VSGenericTarget : ITarget
         foreach(TextGenNode node in project.TextGenNodes)
         {
             ps.WriteLine("  <Target Name=\"Prebuild\" BeforeTargets=\"PreBuildEvent\">");
-            ps.WriteLine($"    <Exec Command=\"'dotnet' '$(DevEnvDir)TextTransformCore.dll' '$(ProjectDir){node.Name}'\" />");
+            ps.WriteLine($"    <Exec Command=\"'dotnet' '$(DevEnvDir)TextTransformCore.dll' '$(ProjectDir){project.Path}\\{node.Name}'\" />");
             ps.WriteLine($"  </Target>");
         }
     }
