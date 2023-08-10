@@ -247,6 +247,7 @@ public class ProjectNode : DataNode, IComparable
                 else if (dataNode is AuthorNode)
                     Authors.Add((AuthorNode)dataNode);
                 else if (dataNode is FilesNode) Files = (FilesNode)dataNode;
+                else if(dataNode is TextGenNode) TextGenNodes.Add((TextGenNode)dataNode);
             }
         }
         finally
@@ -427,6 +428,12 @@ public class ProjectNode : DataNode, IComparable
             return tmp;
         }
     }
+
+    /// <summary>
+    /// Gets the text generator nodes
+    /// </summary>
+    public List<TextGenNode> TextGenNodes { get; private set; } = new();
+
 
     /// <summary>
     ///     Gets the configurations table.

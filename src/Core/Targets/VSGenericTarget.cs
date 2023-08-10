@@ -687,6 +687,23 @@ public abstract class VSGenericTarget : ITarget
         }
     }
 
+    private void WriteTextGeneratorNodes(ProjectNode project, StreamWriter ps)
+    {
+        foreach(TextGenNode node in project.TextGenNodes)
+        {
+            ps.WriteLine("  <ItemGroup>");
+            ps.WriteLine($"    <None Update=\"{node.Name}\">");
+            ps.WriteLine($"      <Generator>{node.Generator}</Generator>");
+            ps.WriteLine($"    </None>");
+            ps.WriteLine($"    <None Update=\"{node.OutputName}\">");
+            ps.WriteLine($"      <DesignTime>True</DesignTime>");
+            ps.WriteLine($"      <AutoGen>{node.AutoGenerate}</AutoGen>");
+            ps.WriteLine($"      <DependentUpon>{node.Name}</DependentUpon>");
+            ps.WriteLine($"    </None>");
+            ps.WriteLine($"  </ItemGroup>");
+        }
+    }
+
     private void WriteProjectDotNet(SolutionNode solution, ProjectNode project, StreamWriter ps)
     {
         #region Project File
@@ -837,6 +854,8 @@ public abstract class VSGenericTarget : ITarget
 
             // Output the ItemGroup for project.References
             WriteProjectReferencesDotNet(solution, project, ps);
+
+            WriteTextGeneratorNodes(project, ps);
 
             if (project.Files.Count > 0)
             {
@@ -1044,8 +1063,9 @@ public abstract class VSGenericTarget : ITarget
 
             ps.WriteLine("</Project>");
 
-            #endregion
         }
+
+        #endregion
     }
 
     private void WriteProjectReferencesDotNet(SolutionNode solution, ProjectNode project, StreamWriter ps)
