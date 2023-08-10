@@ -26,7 +26,7 @@
 			<File>prebuild.xml</File>
 		</Files>
 		<Project name="Prebuild"
-		         path="src"
+		         path="source/Prebuild"
 		         language="C#"
 		         assemblyName="prebuild"
 		         icon="App.ico"
@@ -48,20 +48,25 @@
 				<Options>
 					<CompilerDefines>DEBUG;TRACE</CompilerDefines>
 					<OptimizeCode>false</OptimizeCode>
-					<OutputPath>bin/Debug</OutputPath>
+					<OutputPath>../../bootstrap/debug</OutputPath>
 					<DebugInformation>true</DebugInformation>
 					<KeyFile>Prebuild.snk</KeyFile>
 					<SuppressWarnings>1595</SuppressWarnings>
+
+          <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+          <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 				</Options>
 			</Configuration>
 			<Configuration name="Release">
 				<Options>
 					<CompilerDefines>TRACE</CompilerDefines>
-					<OutputPath>bin/Release</OutputPath>
+					<OutputPath>../../bootstrap/</OutputPath>
 					<OptimizeCode>true</OptimizeCode>
 					<DebugInformation>false</DebugInformation>
 					<KeyFile>Prebuild.snk</KeyFile>
 					<SuppressWarnings>1595</SuppressWarnings>
+          <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+          <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 				</Options>
 			</Configuration>
 			<Reference name="System.EnterpriseServices" />
@@ -73,6 +78,35 @@
 					<Exclude name="obj" pattern="obj"/>
 				</Match>
 			</Files>
+		</Project>
+  
+		<Project name="SnapWrap"
+             path="source/snapwrap"
+             language="C#"
+             type="Exe"
+             version="1.0.1"
+             rootNamespace="dev.zontreck.snap"
+             startupObject="dev.zontreck.snap.Wrap">
+      <Author>Tara Piccari (tarapiccari@gmail.com)</Author>
+      <Description>C# Prebuild Scripting for code generation</Description>
+			<Configuration name="Debug">
+        <Options>
+          <OutputPath>../../bootstrap/debug/</OutputPath>
+          <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+          <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        </Options>
+      </Configuration>
+      <Configuration name="Release">
+        <Options>
+          <OutputPath>../../bootstrap/</OutputPath>
+          <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+          <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        </Options>
+      </Configuration>
+
+      <PackageReference name="Microsoft.CodeAnalysis.CSharp" version="4.6.0"/>
+      <PackageReference name="Microsoft.CodeAnalysis.CSharp.Scripting" version="4.6.0"/>
+
 		</Project>
 	</Solution>
 </Prebuild>

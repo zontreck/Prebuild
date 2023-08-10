@@ -691,8 +691,12 @@ public abstract class VSGenericTarget : ITarget
     {
         foreach(TextGenNode node in project.TextGenNodes)
         {
+            string pathText = Path.Combine("Prebuild", "bootstrap", "SnapWrap.dll");
+            string filePath = Path.Combine(project.Path, node.Name);
+            string outputFile = Path.Combine(project.Path, node.OutputName);
+
             ps.WriteLine("  <Target Name=\"Prebuild\" BeforeTargets=\"PreBuildEvent\">");
-            ps.WriteLine($"    <Exec Command=\"'dotnet' '$(DevEnvDir)TextTransformCore.dll' '$(ProjectDir){project.Path}\\{node.Name}'\" />");
+            ps.WriteLine($"    <Exec Command=\"'dotnet' '$(ProjectDir){pathText}' '$(ProjectDir){filePath}' '$(ProjectDir){outputFile}'\" />");
             ps.WriteLine($"  </Target>");
         }
     }

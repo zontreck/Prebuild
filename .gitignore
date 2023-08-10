@@ -396,3 +396,13 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Exclude any new files in the bootstrap folder, only the manually added prebuild bootstrap
+bootstrap/debug
+bootstrap/*.pdb
+bootstrap/*.exe
+bootstrap/**
+bootstrap
+
+
+*.sln
