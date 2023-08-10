@@ -25,13 +25,13 @@ IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY O
 
 #endregion
 
+using Prebuild.Core.Interfaces;
+using Prebuild.Core.Nodes;
+using Prebuild.Core.Utilities;
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
-using Prebuild.Core.Interfaces;
-using Prebuild.Core.Nodes;
-using Prebuild.Core.Utilities;
 
 namespace Prebuild.Core.Targets;
 
@@ -691,17 +691,9 @@ public abstract class VSGenericTarget : ITarget
     {
         foreach(TextGenNode node in project.TextGenNodes)
         {
-            ps.WriteLine("  <ItemGroup>");
-            ps.WriteLine($"    <None Update=\"{node.Name}\">");
-            ps.WriteLine($"      <Generator>{node.Generator}</Generator>");
-            ps.WriteLine($"      <LastGenOutput>{node.OutputName}</LastGenOutput>");
-            ps.WriteLine($"    </None>");
-            ps.WriteLine($"    <Compile Update=\"{node.OutputName}\">");
-            ps.WriteLine($"      <DesignTime>True</DesignTime>");
-            ps.WriteLine($"      <AutoGen>{node.AutoGenerate}</AutoGen>");
-            ps.WriteLine($"      <DependentUpon>{node.Name}</DependentUpon>");
-            ps.WriteLine($"    </Compile>");
-            ps.WriteLine($"  </ItemGroup>");
+            ps.WriteLine("  <Target Name=\"Prebuild\" Before=\"PreBuildEvent\">");
+            ps.WriteLine($"    <Exec Command=\"'dotnet' '$(DevEnvDir)TextTransformCore.dll' '$(ProjectDir){node.Name}'\" />");
+            ps.WriteLine($"  </Target>");
         }
     }
 
