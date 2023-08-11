@@ -14,14 +14,24 @@ namespace SnapWrap
             string output = args[1];
             var customImports = args[2].Split("..");
 
+            if (customImports.Length == 0) customImports = new string[3] { "System", "System.Diagnostics.Process", "System.IO" };
+
             try
             {
                 var inputCode = File.ReadAllText(input);
 
                 var options = ScriptOptions.Default
                     .WithReferences(AppDomain.CurrentDomain.GetAssemblies())  // Add necessary assemblies
+                    .WithReferences(typeof(Process).Assembly,
+                                    typeof(Console).Assembly
+                        )
+                    .WithOptimizationLevel(Microsoft.CodeAnalysis.OptimizationLevel.Release)
                     .WithImports(customImports)
                     .WithAllowUnsafe(true);
+
+
+                Console.WriteLine("Run Script: " + input);
+                Console.WriteLine("Script Length: " + inputCode.Length);
 
 
                 // Capture console output using custom class

@@ -94,6 +94,7 @@
           <OutputPath>../../bootstrap/debug/</OutputPath>
           <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
           <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		  
         </Options>
       </Configuration>
       <Configuration name="Release">
@@ -104,11 +105,12 @@
         </Options>
       </Configuration>
 
-	  
+
       <PackageReference name="Microsoft.CodeAnalysis" version="4.6.0"/>
       <PackageReference name="Microsoft.CodeAnalysis.CSharp" version="4.6.0"/>
       <PackageReference name="Microsoft.CodeAnalysis.CSharp.Scripting" version="4.6.0"/>
-      <PackageReference name="System.Diagnostics.Process" version="4.3.0"/>
+	  <Reference name="System.Diagnostics"/>
+	  <Reference name="System.Diagnostics.Process"/>
 
 		</Project>
 	</Solution>
