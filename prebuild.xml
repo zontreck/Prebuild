@@ -81,7 +81,7 @@
 		</Project>
   
 		<Project name="SnapWrap"
-             path="source/snapwrap"
+             path="source/SnapWrap"
              language="C#"
              type="Exe"
              version="1.0.1"
