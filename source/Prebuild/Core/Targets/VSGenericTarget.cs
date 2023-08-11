@@ -696,7 +696,7 @@ public abstract class VSGenericTarget : ITarget
             string outputFile = Path.Combine(project.Path, node.OutputName);
 
             ps.WriteLine("  <Target Name=\"Prebuild\" BeforeTargets=\"PreBuildEvent\">");
-            ps.WriteLine($"    <Exec Command='dotnet \"$(SolutionDir){pathText}\" \"$(ProjectDir){node.Name}\" \"$(ProjectDir){node.OutputName}\" \"{node.Libraries}\"' />");
+            ps.WriteLine($"    <Exec Command='dotnet \"$(SolutionDir){pathText}\" \"$({node.SourceDirectory}){node.Name}\" \"$(ProjectDir){node.OutputName}\" \"{node.Libraries}\"' />");
             ps.WriteLine($"  </Target>");
         }
     }

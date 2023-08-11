@@ -14,10 +14,9 @@ namespace Prebuild.Core.Nodes
     {
         #region Values
         private string m_Name;
-        private string m_Generator;
-        private bool m_AutoGen = true;
         private string m_OutputName;
         private List<string> m_Libs = new();
+        
 
         #endregion
 
@@ -35,6 +34,8 @@ namespace Prebuild.Core.Nodes
                     m_Libs.Add(((ReferenceNode)data).Name);
                 }
             }
+
+            SourceInSolution = Helper.ParseBoolean(node, "sourceInSolution", false);
             
         }
         #endregion
@@ -45,30 +46,6 @@ namespace Prebuild.Core.Nodes
             get
             {
                 return m_Name;
-            }
-        }
-
-        public string Generator
-        {
-            get
-            {
-                return m_Generator;
-            }
-        }
-
-        public bool AutoGen
-        {
-            get
-            {
-                return m_AutoGen;
-            }
-        }
-
-        public string AutoGenerate
-        {
-            get
-            {
-                return AutoGen ? "True" : "False";
             }
         }
 
@@ -85,6 +62,16 @@ namespace Prebuild.Core.Nodes
             get
             {
                 return String.Join("..", m_Libs);
+            }
+        }
+
+        public bool SourceInSolution { get; private set; } = false;
+
+        public string SourceDirectory
+        {
+            get
+            {
+                return SourceInSolution ? "SolutionDir" : "ProjectDir";
             }
         }
 

@@ -404,5 +404,5 @@ bootstrap/*.exe
 bootstrap/**
 bootstrap
 
-
+source/**/*.csproj
 *.sln
