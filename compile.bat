@@ -1,4 +1,4 @@
 @echo off
 
-runprebuild.bat
+call runprebuild.bat
 dotnet build -c Release

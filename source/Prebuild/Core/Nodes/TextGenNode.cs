@@ -17,6 +17,7 @@ namespace Prebuild.Core.Nodes
         private string m_Generator;
         private bool m_AutoGen = true;
         private string m_OutputName;
+        private List<string> m_Libs = new();
 
         #endregion
 
@@ -24,9 +25,17 @@ namespace Prebuild.Core.Nodes
         public override void Parse(XmlNode node)
         {
             m_Name = Helper.AttributeValue(node, "name", "");
-            m_Generator = Helper.AttributeValue(node, "generator", "TextTemplatingFileGenerator");
-            m_AutoGen = Helper.ParseBoolean(node, "autogen", true);
             m_OutputName = Helper.AttributeValue(node, "output", "");
+
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+                var data = Kernel.Instance.ParseNode(childNode, this);
+                if(data is ReferenceNode)
+                {
+                    m_Libs.Add(((ReferenceNode)data).Name);
+                }
+            }
+            
         }
         #endregion
 
@@ -68,6 +77,14 @@ namespace Prebuild.Core.Nodes
             get
             {
                 return m_OutputName;
+            }
+        }
+
+        public string Libraries
+        {
+            get
+            {
+                return String.Join("..", m_Libs);
             }
         }
 
