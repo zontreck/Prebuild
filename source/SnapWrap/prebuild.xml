@@ -1,0 +1,33 @@
+<Project name="SnapWrap"
+    path="source/SnapWrap"
+    language="C#"
+    type="Exe"
+    version="1.0.1"
+    rootNamespace="dev.zontreck.snap"
+    startupObject="dev.zontreck.snap.Wrap">
+    <Author>Tara Piccari (tarapiccari@gmail.com)</Author>
+    <Description>C# Prebuild Scripting for code generation</Description>
+    <Configuration name="Debug">
+        <Options>
+            <OutputPath>../../bootstrap/debug/</OutputPath>
+            <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+            <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+
+        </Options>
+    </Configuration>
+    <Configuration name="Release">
+        <Options>
+            <OutputPath>../../bootstrap/</OutputPath>
+            <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+            <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        </Options>
+    </Configuration>
+
+
+    <PackageReference name="Microsoft.CodeAnalysis" version="4.6.0" />
+    <PackageReference name="Microsoft.CodeAnalysis.CSharp" version="4.6.0" />
+    <PackageReference name="Microsoft.CodeAnalysis.CSharp.Scripting" version="4.6.0" />
+    <Reference name="System.Diagnostics" />
+    <Reference name="System.Diagnostics.Process" />
+
+</Project>

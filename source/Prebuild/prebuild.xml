@@ -1,0 +1,54 @@
+<Project name="Prebuild"
+    path="source/Prebuild"
+    language="C#"
+    assemblyName="prebuild"
+    icon="App.ico"
+    type="Exe"
+    rootNamespace="Prebuild"
+    startupObject="Prebuild.Prebuild"
+    version="2.0.9"
+>
+    <Author>Matthew Holmes (matthew@wildfiregames.com)</Author>
+    <Author>Dan Moorehead (dan05a@gmail.com)</Author>
+    <Author>Dave Hudson (jendave@yahoo.com)</Author>
+    <Author>Rob Loach (http://robloach.net)</Author>
+    <Author>C.J. Adams-Collier (cjac@colliertech.org)</Author>
+    <Author>John Hurliman (john.hurliman@intel.com)</Author>
+    <Author>WhiteCore build (2015) Rowan Deppeler (greythan@gmail.com)</Author>
+    <Author>OpenSimulator build (2017) AJLDuarte</Author>
+    <Description>The Prebuild project generator</Description>
+    <Configuration name="Debug">
+        <Options>
+            <CompilerDefines>DEBUG;TRACE</CompilerDefines>
+            <OptimizeCode>false</OptimizeCode>
+            <OutputPath>../../bootstrap/debug</OutputPath>
+            <DebugInformation>true</DebugInformation>
+            <KeyFile>Prebuild.snk</KeyFile>
+            <SuppressWarnings>1595</SuppressWarnings>
+
+            <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+            <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        </Options>
+    </Configuration>
+    <Configuration name="Release">
+        <Options>
+            <CompilerDefines>TRACE</CompilerDefines>
+            <OutputPath>../../bootstrap/</OutputPath>
+            <OptimizeCode>true</OptimizeCode>
+            <DebugInformation>false</DebugInformation>
+            <KeyFile>Prebuild.snk</KeyFile>
+            <SuppressWarnings>1595</SuppressWarnings>
+            <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+            <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        </Options>
+    </Configuration>
+    <Reference name="System.EnterpriseServices" />
+    <Files>
+        <Match pattern="App.ico" buildAction="EmbeddedResource" />
+        <Match path="data" pattern="prebuild-1.10.xsd" buildAction="EmbeddedResource" />
+        <Match path="data" pattern="autotools.xml" buildAction="EmbeddedResource" />
+        <Match pattern="*.cs" recurse="true">
+            <Exclude name="obj" pattern="obj" />
+        </Match>
+    </Files>
+</Project>
