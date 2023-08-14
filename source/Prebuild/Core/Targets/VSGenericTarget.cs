@@ -736,6 +736,14 @@ public abstract class VSGenericTarget : ITarget
                 ps.WriteLine(
                     $"    <CopyLocalLockFileAssemblies>{project.CopyLocalLockFileAssemblies}</CopyLocalLockFileAssemblies>");
 
+            if(project.FrameworkVersion >= FrameworkVersion.net7_0)
+            {
+                if(project.MauiSettings != null)
+                {
+                    ps.WriteLine(project.MauiSettings);
+                }
+            }
+
             ps.WriteLine($"<SelfContained>{solution.Options.SelfContained}</SelfContained>");
             if (solution.Options.UseRuntimeIdentifier)
             {

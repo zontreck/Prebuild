@@ -1,6 +1,7 @@
 2023, Tara Piccari
 	* Prebuild updated fully to net7
 	* Added VS Solution flag to include dep files
+	* Added support for Multi-platform App UI
 
 2017, August Ubit Umarov
 	* add Freak Tech patch for prefer32bit default to false

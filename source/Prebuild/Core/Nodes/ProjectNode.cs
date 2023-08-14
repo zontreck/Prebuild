@@ -248,6 +248,7 @@ public class ProjectNode : DataNode, IComparable
                     Authors.Add((AuthorNode)dataNode);
                 else if (dataNode is FilesNode) Files = (FilesNode)dataNode;
                 else if(dataNode is TextGenNode) TextGenNodes.Add((TextGenNode)dataNode);
+                else if(dataNode is MauiNode obj) MauiSettings = obj;
             }
         }
         finally
@@ -299,6 +300,12 @@ public class ProjectNode : DataNode, IComparable
     /// </summary>
     /// <value>The name.</value>
     public string Name { get; private set; } = "unknown";
+
+    /// <summary>
+    /// Contains settings for DotNet Maui (7.0+)
+    /// Default is null, which indicates not to include any Maui content in the project file.
+    /// </summary>
+    public MauiNode MauiSettings { get; private set; } = null;
 
     /// <summary>
     ///     The version of the .NET Framework to compile under
