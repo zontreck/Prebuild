@@ -247,8 +247,9 @@ public class ProjectNode : DataNode, IComparable
                 else if (dataNode is AuthorNode)
                     Authors.Add((AuthorNode)dataNode);
                 else if (dataNode is FilesNode) Files = (FilesNode)dataNode;
-                else if(dataNode is TextGenNode) TextGenNodes.Add((TextGenNode)dataNode);
-                else if(dataNode is MauiNode obj) MauiSettings = obj;
+                else if (dataNode is TextGenNode) TextGenNodes.Add((TextGenNode)dataNode);
+                else if (dataNode is MauiNode obj) MauiSettings = obj;
+                else if (dataNode is NullableNode) Nullable = true;
             }
         }
         finally
@@ -341,6 +342,18 @@ public class ProjectNode : DataNode, IComparable
     /// </summary>
     /// <value>The filter groups.</value>
     public string FilterGroups { get; private set; } = "";
+
+    /// <summary>
+    /// Indicates project nullable attribute
+    /// </summary>
+    public bool Nullable { get; private set; } = false;
+    public string NullableStr 
+    { 
+        get
+        {
+            return Nullable ? "enable" : "disable";
+        } 
+    }
 
     /// <summary>
     ///     Gets the project's version

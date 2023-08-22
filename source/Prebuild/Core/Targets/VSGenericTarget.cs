@@ -714,8 +714,7 @@ public abstract class VSGenericTarget : ITarget
             ps.WriteLine();
 
             ps.WriteLine("  <PropertyGroup>");
-            ps.WriteLine("    <TargetFramework>{0}</TargetFramework>",
-                project.FrameworkVersion.ToString().Replace("_", "."));
+            ps.WriteLine($"    <TargetFramework>{project.FrameworkVersion.ToString().Replace("_", ".")}</TargetFramework>");
             ps.WriteLine("    <PreserveCompilationContext>false</PreserveCompilationContext>");
             ps.WriteLine("    <OutputType>{0}</OutputType>",
                 project.Type == ProjectType.Web ? ProjectType.Library.ToString() : project.Type.ToString());
@@ -744,7 +743,15 @@ public abstract class VSGenericTarget : ITarget
                 }
             }
 
-            ps.WriteLine($"<SelfContained>{solution.Options.SelfContained}</SelfContained>");
+            if(project.Nullable)
+                ps.WriteLine($"    <Nullable>{project.NullableStr}</Nullable>");
+
+            if(project.AppIcon != "")
+            {
+
+                ps.WriteLine($"     <ApplicationIcon>{project.AppIcon}</ApplicationIcon>");
+            }
+            ps.WriteLine($"    <SelfContained>{solution.Options.SelfContained}</SelfContained>");
             if (solution.Options.UseRuntimeIdentifier)
             {
                 var RID = "unknown";
