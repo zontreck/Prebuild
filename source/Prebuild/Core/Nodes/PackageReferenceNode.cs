@@ -57,6 +57,7 @@ public class PackageReferenceNode : DataNode, IComparable
     {
         Name = Helper.AttributeValue(node, "name", Name);
         Version = Helper.AttributeValue(node, "version", Version);
+        PrivateAssets = Helper.AttributeValue(node, "private", PrivateAssets);
     }
 
     #endregion
@@ -78,6 +79,8 @@ public class PackageReferenceNode : DataNode, IComparable
     /// </summary>
     /// <value>The version.</value>
     public string Version { get; private set; }
+
+    public string PrivateAssets { get; private set; }
 
     #endregion
 }

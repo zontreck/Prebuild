@@ -1,7 +1,13 @@
-2023, Tara Piccari
+2023, August Tara Piccari
 	* Prebuild updated fully to net7
 	* Added VS Solution flag to include dep files
 	* Added support for Multi-platform App UI
+	* Added support for toggling default file scanning, files node no longer automatically indicates this.
+	* Added support for custom cross-platform compatible scripting/text generation
+	* Added support for Windows Forms on dotnet 6+
+	* Added support for marking internals visible to another namespace
+	* Added support for PrivateAssets flag on package reference
+	* Added support for Nullable node
 
 2017, August Ubit Umarov
 	* add Freak Tech patch for prefer32bit default to false

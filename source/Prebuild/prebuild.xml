@@ -6,7 +6,7 @@
     type="Exe"
     rootNamespace="Prebuild"
     startupObject="Prebuild.Prebuild"
-    version="2.0.9"
+    version="2.0.10"
 >
     <Author>Matthew Holmes (matthew@wildfiregames.com)</Author>
     <Author>Dan Moorehead (dan05a@gmail.com)</Author>
@@ -47,8 +47,5 @@
         <Match pattern="App.ico" buildAction="EmbeddedResource" />
         <Match path="data" pattern="prebuild-1.10.xsd" buildAction="EmbeddedResource" />
         <Match path="data" pattern="autotools.xml" buildAction="EmbeddedResource" />
-        <Match pattern="*.cs" recurse="true">
-            <Exclude name="obj" pattern="obj" />
-        </Match>
     </Files>
 </Project>

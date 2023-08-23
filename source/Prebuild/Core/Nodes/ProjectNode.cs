@@ -186,6 +186,7 @@ public class ProjectNode : DataNode, IComparable
         ConfigFile = Helper.AttributeValue(node, "configFile", ConfigFile);
         DesignerFolder = Helper.AttributeValue(node, "designerFolder", DesignerFolder);
         AssemblyName = Helper.AttributeValue(node, "assemblyName", AssemblyName);
+        ScanFiles = Helper.ParseBoolean(node, "scanFiles", true);
         Language = Helper.AttributeValue(node, "language", Language);
         Type = (ProjectType)Helper.EnumAttributeValue(node, "type", typeof(ProjectType), Type);
         Runtime = (ClrRuntime)Helper.EnumAttributeValue(node, "runtime", typeof(ClrRuntime), Runtime);
@@ -208,6 +209,7 @@ public class ProjectNode : DataNode, IComparable
         Guid = new Guid(guid);
 
         GenerateAssemblyInfoFile = Helper.ParseBoolean(node, "generateAssemblyInfoFile", false);
+        UseWindowsForms = Helper.ParseBoolean(node, "winforms", false);
         DebugStartParameters = Helper.AttributeValue(node, "debugStartParameters", string.Empty);
 
         if (string.IsNullOrEmpty(AssemblyName)) AssemblyName = Name;
@@ -250,6 +252,7 @@ public class ProjectNode : DataNode, IComparable
                 else if (dataNode is TextGenNode) TextGenNodes.Add((TextGenNode)dataNode);
                 else if (dataNode is MauiNode obj) MauiSettings = obj;
                 else if (dataNode is NullableNode) Nullable = true;
+                else if (dataNode is InternalsNode inObj) InternalsVisible = inObj; 
             }
         }
         finally
@@ -307,6 +310,21 @@ public class ProjectNode : DataNode, IComparable
     /// Default is null, which indicates not to include any Maui content in the project file.
     /// </summary>
     public MauiNode MauiSettings { get; private set; } = null;
+
+    /// <summary>
+    /// Marks the visibility for internals
+    /// </summary>
+    public InternalsNode InternalsVisible { get; private set; }
+
+    /// <summary>
+    /// Enables Windows forms on a dotnet project.
+    /// </summary>
+    public bool UseWindowsForms { get; private set; } = false;
+
+    /// <summary>
+    /// Scans the directory for files
+    /// </summary>
+    public bool ScanFiles {get;private set;} = true;
 
     /// <summary>
     ///     The version of the .NET Framework to compile under

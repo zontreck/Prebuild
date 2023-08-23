@@ -714,10 +714,12 @@ public abstract class VSGenericTarget : ITarget
             ps.WriteLine();
 
             ps.WriteLine("  <PropertyGroup>");
-            ps.WriteLine($"    <TargetFramework>{project.FrameworkVersion.ToString().Replace("_", ".")}</TargetFramework>");
+            ps.WriteLine("    <TargetFramework>{0}{1}</TargetFramework>", project.FrameworkVersion.ToString().Replace("_", "."), project.UseWindowsForms? "-windows" : "");
             ps.WriteLine("    <PreserveCompilationContext>false</PreserveCompilationContext>");
-            ps.WriteLine("    <OutputType>{0}</OutputType>",
+            if (!project.UseWindowsForms)
+                ps.WriteLine("    <OutputType>{0}</OutputType>",
                 project.Type == ProjectType.Web ? ProjectType.Library.ToString() : project.Type.ToString());
+            else ps.WriteLine("    <OutputType>WinExe</OutputType>");
             ps.WriteLine("    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>");
             if (project.FrameworkVersion == FrameworkVersion.netstandard2_0)
                 ps.WriteLine("    <RuntimeFrameworkVersion>5.0.0</RuntimeFrameworkVersion>");
@@ -725,10 +727,13 @@ public abstract class VSGenericTarget : ITarget
             ps.WriteLine("    <AssemblyName>{0}</AssemblyName>", project.AssemblyName);
             ps.WriteLine("    <Deterministic>true</Deterministic>");
             //ps.WriteLine("    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>");
+            if (project.UseWindowsForms)
+                ps.WriteLine("    <UseWindowsForms>true</UseWindowsForms>");
             ps.WriteLine("    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>");
             if (!solution.Options.UseDepsFile)
                 ps.WriteLine("    <GenerateDependencyFile>false</GenerateDependencyFile>");
-            if (listFiles)
+            
+            if (!project.ScanFiles)
                 ps.WriteLine("    <EnableDefaultItems>false</EnableDefaultItems>");
 
             if (project.CopyLocalLockFileAssemblies)
@@ -742,6 +747,7 @@ public abstract class VSGenericTarget : ITarget
                     ps.WriteLine(project.MauiSettings);
                 }
             }
+
 
             if(project.Nullable)
                 ps.WriteLine($"    <Nullable>{project.NullableStr}</Nullable>");
@@ -858,12 +864,18 @@ public abstract class VSGenericTarget : ITarget
             {
                 ps.WriteLine("  <ItemGroup>");
                 foreach (var pack in project.PackageReferences)
-                    ps.WriteLine("    <PackageReference Include=\"{0}\" Version=\"{1}\" />",
-                        pack.Name, pack.Version);
+                    ps.WriteLine("    <PackageReference Include=\"{0}\" Version=\"{1}\" {2}/>",
+                        pack.Name, pack.Version, pack.PrivateAssets != "" ? $"PrivateAssets=\"{pack.PrivateAssets}\"" : "");
                 ps.WriteLine("  </ItemGroup>");
                 ps.WriteLine();
             }
 
+            if (project.InternalsVisible != null)
+            {
+                ps.WriteLine("  <ItemGroup>");
+                ps.WriteLine($"    <InternalsVisibleTo Include=\"{project.InternalsVisible.Name}\"/>");
+                ps.WriteLine("  </ItemGroup>");
+            }
             // Output the ItemGroup for project.References
             WriteProjectReferencesDotNet(solution, project, ps);
 
@@ -905,7 +917,7 @@ public abstract class VSGenericTarget : ITarget
 
                     if (subType == SubType.Designer)
                     {
-                        ps.WriteLine("    <EmbeddedResource Include=\"{0}\">", file);
+                        ps.WriteLine("    <EmbeddedResource Update=\"{0}\">", file);
 
                         var autogen_name = file.Substring(0, file.LastIndexOf('.')) + ".Designer.cs";
                         var dependent_name = filePath.Substring(0, file.LastIndexOf('.')) + ".cs";
@@ -919,13 +931,13 @@ public abstract class VSGenericTarget : ITarget
                         {
                             ps.WriteLine("      <Generator>ResXFileCodeGenerator</Generator>");
                             ps.WriteLine("      <LastGenOutput>{0}</LastGenOutput>", Path.GetFileName(autogen_name));
-                            ps.WriteLine("      <SubType>" + subType + "</SubType>");
+                            //ps.WriteLine("      <SubType>" + subType + "</SubType>");
                         }
 
                         ps.WriteLine("    </EmbeddedResource>");
                         if (File.Exists(Helper.NormalizePath(autogen_name)))
                         {
-                            ps.WriteLine("    <Compile Include=\"{0}\">", autogen_name);
+                            ps.WriteLine("    <Compile Update=\"{0}\">", autogen_name);
                             //ps.WriteLine("	  <DesignTime>True</DesignTime>");
 
                             // If a parent .cs file exists, link this autogen file to it. Otherwise link
@@ -939,6 +951,7 @@ public abstract class VSGenericTarget : ITarget
                             {
                                 ps.WriteLine("      <AutoGen>True</AutoGen>");
                                 ps.WriteLine("      <DependentUpon>{0}</DependentUpon>", Path.GetFileName(filePath));
+                                ps.WriteLine("      <DesignTime>True</DesignTime>");
                             }
 
                             ps.WriteLine("    </Compile>");
