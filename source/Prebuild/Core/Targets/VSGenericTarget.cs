@@ -907,7 +907,7 @@ public abstract class VSGenericTarget : ITarget
                     if (subType != SubType.Code && subType != SubType.Settings && subType != SubType.Designer
                         && subType != SubType.CodeBehind)
                     {
-                        ps.WriteLine("    <EmbeddedResource Include=\"{0}\">",
+                        ps.WriteLine("    <EmbeddedResource Update=\"{0}\">",
                             file.Substring(0, file.LastIndexOf('.')) + ".resx");
                         ps.WriteLine("      <DependentUpon>{0}</DependentUpon>", Path.GetFileName(file));
                         ps.WriteLine("      <SubType>Designer</SubType>");
@@ -963,7 +963,7 @@ public abstract class VSGenericTarget : ITarget
                     if (subType == SubType.Settings)
                     {
                         ps.Write("    <{0} ", project.Files.GetBuildAction(filePath));
-                        ps.WriteLine("Include=\"{0}\">", file);
+                        ps.WriteLine("Update=\"{0}\">", file);
                         var fileName = Path.GetFileName(filePath);
                         if (project.Files.GetBuildAction(filePath) == BuildAction.None)
                         {
@@ -1002,7 +1002,7 @@ public abstract class VSGenericTarget : ITarget
 
                             // be sure to write out the path with backslashes so VS recognizes
                             // the file properly.
-                            ps.WriteLine("Include=\"{0}\">", file);
+                            ps.WriteLine("Update=\"{0}\">", file);
 
                             var last_period_index = file.LastIndexOf('.');
                             var short_file_name = last_period_index >= 0
