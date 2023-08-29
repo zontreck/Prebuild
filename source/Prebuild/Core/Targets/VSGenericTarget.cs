@@ -704,7 +704,7 @@ public abstract class VSGenericTarget : ITarget
             if (node.Tool == "SnapWrap")
                 ps.WriteLine($"    <Exec Command='dotnet \"$(SolutionDir){pathText}\" \"$({node.SourceDirectory}){node.Name}\" \"$(ProjectDir){node.OutputName}\" \"{node.Libraries}\"' />");
             else
-                ps.WriteLine($"    <Exec Command='dotnet \"$(SolutionDir){pathText}\" \"$({node.SourceDirectory}){node.Name}\" \"$(ProjectDir){node.OutputName}\" />");
+                ps.WriteLine($"    <Exec Command='dotnet \"$(SolutionDir){pathText}\" \"$({node.SourceDirectory}){node.Name}\" \"$(ProjectDir){node.OutputName}\"' />");
 
             ps.WriteLine($"  </Target>");
 
