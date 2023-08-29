@@ -1,0 +1,31 @@
+<Project name="Bottle"
+    path="source/Bottle"
+    language="C#"
+    type="Exe"
+    version="1.0.0"
+    icon="icon/Bottle.ico">
+    <Author>Tara Piccari (tarapiccari@gmail.com)</Author>
+    <Description>C# Prebuild for code generation utilizing Json files as a resource</Description>
+    <Configuration name="Debug">
+        <Options>
+            <OutputPath>../../bootstrap/debug/</OutputPath>
+            <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+            <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+
+        </Options>
+    </Configuration>
+    <Configuration name="Release">
+        <Options>
+            <OutputPath>../../bootstrap/</OutputPath>
+            <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+            <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        </Options>
+    </Configuration>
+
+
+    <Files>
+        <File copyToOutput="always" preservePath="false">icon/Bottle.ico</File>
+        <File copyToOutput="always" preservePath="false">icon/Bottle.png</File>
+    </Files>
+
+</Project>
