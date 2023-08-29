@@ -16,6 +16,7 @@ namespace Prebuild.Core.Nodes
         private string m_Name;
         private string m_OutputName;
         private List<string> m_Libs = new();
+        private string m_Tool;
         
 
         #endregion
@@ -25,6 +26,7 @@ namespace Prebuild.Core.Nodes
         {
             m_Name = Helper.AttributeValue(node, "name", "");
             m_OutputName = Helper.AttributeValue(node, "output", "");
+            m_Tool = Helper.AttributeValue(node, "tool", "SnapWrap");
 
             foreach (XmlNode childNode in node.ChildNodes)
             {
@@ -72,6 +74,14 @@ namespace Prebuild.Core.Nodes
             get
             {
                 return SourceInSolution ? "SolutionDir" : "ProjectDir";
+            }
+        }
+
+        public string Tool
+        {
+            get
+            {
+                return m_Tool;
             }
         }
 

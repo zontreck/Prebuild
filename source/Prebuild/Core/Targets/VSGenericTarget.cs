@@ -687,17 +687,28 @@ public abstract class VSGenericTarget : ITarget
         }
     }
 
+
     private void WriteTextGeneratorNodes(ProjectNode project, StreamWriter ps)
     {
+        int count = 0;
         foreach(TextGenNode node in project.TextGenNodes)
         {
-            string pathText = Path.Combine("Prebuild", "bootstrap", "SnapWrap.dll");
+            string pathText = Path.Combine("Prebuild", "bootstrap", node.Tool);
+            pathText = Path.ChangeExtension(pathText, "dll");
+
             string filePath = Path.Combine(project.Path, node.Name);
             string outputFile = Path.Combine(project.Path, node.OutputName);
 
-            ps.WriteLine("  <Target Name=\"Prebuild\" BeforeTargets=\"PreBuildEvent\">");
-            ps.WriteLine($"    <Exec Command='dotnet \"$(SolutionDir){pathText}\" \"$({node.SourceDirectory}){node.Name}\" \"$(ProjectDir){node.OutputName}\" \"{node.Libraries}\"' />");
+            ps.WriteLine("  <Target Name=\"Prebuild-"+count+"\" BeforeTargets=\"PreBuildEvent\">");
+
+            if (node.Tool == "SnapWrap")
+                ps.WriteLine($"    <Exec Command='dotnet \"$(SolutionDir){pathText}\" \"$({node.SourceDirectory}){node.Name}\" \"$(ProjectDir){node.OutputName}\" \"{node.Libraries}\"' />");
+            else
+                ps.WriteLine($"    <Exec Command='dotnet \"$(SolutionDir){pathText}\" \"$({node.SourceDirectory}){node.Name}\" \"$(ProjectDir){node.OutputName}\" />");
+
             ps.WriteLine($"  </Target>");
+
+            count++;
         }
     }
 
