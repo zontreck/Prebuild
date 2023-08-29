@@ -4,8 +4,7 @@
     type="Exe"
     version="1.0.1"
     icon="icon/SnapWrap.ico"
-    rootNamespace="dev.zontreck.snap"
-    startupObject="dev.zontreck.snap.Wrap">
+    >
     <Author>Tara Piccari (tarapiccari@gmail.com)</Author>
     <Description>C# Prebuild Scripting for code generation</Description>
     <Configuration name="Debug">

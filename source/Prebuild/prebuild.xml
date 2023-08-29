@@ -4,8 +4,6 @@
     assemblyName="prebuild"
     icon="App.ico"
     type="Exe"
-    rootNamespace="Prebuild"
-    startupObject="Prebuild.Prebuild"
     version="2.0.10"
 >
     <Author>Matthew Holmes (matthew@wildfiregames.com)</Author>
@@ -16,6 +14,7 @@
     <Author>John Hurliman (john.hurliman@intel.com)</Author>
     <Author>WhiteCore build (2015) Rowan Deppeler (greythan@gmail.com)</Author>
     <Author>OpenSimulator build (2017) AJLDuarte</Author>
+    <Author>Tara Piccari</Author>
     <Description>The Prebuild project generator</Description>
     <Configuration name="Debug">
         <Options>

@@ -22,7 +22,6 @@
         </Options>
     </Configuration>
 
-
     <Files>
         <File copyToOutput="Always" preservePath="false">icon/Bottle.ico</File>
         <File copyToOutput="Always" preservePath="false">icon/Bottle.png</File>
