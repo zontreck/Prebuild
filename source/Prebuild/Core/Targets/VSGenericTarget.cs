@@ -708,6 +708,19 @@ public abstract class VSGenericTarget : ITarget
 
             ps.WriteLine($"  </Target>");
 
+
+            ps.WriteLine("<ItemGroup>");
+            ps.WriteLine("<None Update=\"" + node.Name + "\">");
+            ps.WriteLine($"<LastGenOutput>{node.OutputName}</LastGenOutput>");
+            ps.WriteLine("</None>");
+
+            ps.WriteLine("<Compile Update=\"" + node.OutputName + "\">");
+            ps.WriteLine($"<DependentUpon>{node.Name}</DependentUpon>");
+            ps.WriteLine("<DesignTime>True</DesignTime>");
+            ps.WriteLine("<AutoGen>True</AutoGen>");
+            ps.WriteLine("</Compile>");
+            ps.WriteLine("</ItemGroup>");
+
             count++;
         }
     }
