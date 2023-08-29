@@ -2,6 +2,7 @@
 using Prebuild.Core.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,7 +39,19 @@ namespace Prebuild.Core.Nodes
             }
 
             SourceInSolution = Helper.ParseBoolean(node, "sourceInSolution", false);
-            
+
+
+            if (m_Tool == "Bottle")
+            {
+                // Add to the extension: Bottle.cs
+                // This is to aid in excluding these files from git
+
+                m_OutputName = Path.ChangeExtension(m_OutputName, ".Bottle.cs");
+
+
+            }
+            else m_OutputName = Path.ChangeExtension(m_OutputName, ".SnapWrap.cs");
+
         }
         #endregion
 
