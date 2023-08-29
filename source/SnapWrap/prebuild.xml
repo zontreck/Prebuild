@@ -32,8 +32,8 @@
     <Reference name="System.Diagnostics.Process" />
 
     <Files>
-        <File copyToOutput="always" preservePath="false">icon/SnapWrap.ico</File>
-        <File copyToOutput="always" preservePath="false">icon/SnapWrap.png</File>
+        <File copyToOutput="Always" preservePath="false">icon/SnapWrap.ico</File>
+        <File copyToOutput="Always" preservePath="false">icon/SnapWrap.png</File>
     </Files>
 
 </Project>

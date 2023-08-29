@@ -24,8 +24,8 @@
 
 
     <Files>
-        <File copyToOutput="always" preservePath="false">icon/Bottle.ico</File>
-        <File copyToOutput="always" preservePath="false">icon/Bottle.png</File>
+        <File copyToOutput="Always" preservePath="false">icon/Bottle.ico</File>
+        <File copyToOutput="Always" preservePath="false">icon/Bottle.png</File>
     </Files>
 
 </Project>
