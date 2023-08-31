@@ -99,25 +99,25 @@ namespace Bottle
 
             if (value.TryGetValue(out int int1))
             {
-                builder.AppendLine($"{indents(indent)}public static readonly int {key} = {int1};");
+                builder.AppendLine($"{indents(indent)}public static int {key} => {int1};");
             } else if (value.TryGetValue(out string str1))
             {
-                builder.AppendLine($"{indents(indent)}public static readonly string {key} = \"{str1}\";");
+                builder.AppendLine($"{indents(indent)}public static string {key} => \"{str1}\";");
             } else if (value.TryGetValue(out bool bool1))
             {
-                builder.AppendLine($"{indents(indent)}public static readonly bool {key} = {bool2String(bool1)};");
+                builder.AppendLine($"{indents(indent)}public static bool {key} => {bool2String(bool1)};");
             } else if (value.TryGetValue(out float f1))
             {
-                builder.AppendLine($"{indents(indent)}public static readonly float {key} = {f1}f;");
+                builder.AppendLine($"{indents(indent)}public static float {key} => {f1}f;");
             } else if (value.TryGetValue(out double d1))
             {
-                builder.AppendLine($"{indents(indent)}public static readonly double {key} = {d1};");
+                builder.AppendLine($"{indents(indent)}public static double {key} => {d1};");
             } else if (value.TryGetValue(out byte b1))
             {
-                builder.AppendLine($"{indents(indent)}public static readonly byte {key} = {b1};");
+                builder.AppendLine($"{indents(indent)}public static byte {key} => {b1};");
             } else if (value.TryGetValue(out long l1))
             {
-                builder.AppendLine($"{indents(indent)}public static readonly long {key} = {l1}L;");
+                builder.AppendLine($"{indents(indent)}public static long {key} => {l1}L;");
             }
 
             return builder.ToString();
