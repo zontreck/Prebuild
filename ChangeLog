@@ -1,3 +1,6 @@
+2023, September Tara Piccari
+	* Added command to initialize a prebuild.xml skeleton file
+
 2023, August Tara Piccari
 	* Prebuild updated fully to net7
 	* Added VS Solution flag to include dep files
