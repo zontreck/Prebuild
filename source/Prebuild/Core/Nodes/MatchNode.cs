@@ -171,12 +171,12 @@ public class MatchNode : DataNode
     public override void Parse(XmlNode node)
     {
         if (node == null) throw new ArgumentNullException("node");
-        var path = Helper.AttributeValue(node, "path", ".");
-        var pattern = Helper.AttributeValue(node, "pattern", "*");
-        var destination = Helper.AttributeValue(node, "destination", string.Empty);
-        var recurse = (bool)Helper.TranslateValue(typeof(bool), Helper.AttributeValue(node, "recurse", "false"));
-        var useRegex = (bool)Helper.TranslateValue(typeof(bool), Helper.AttributeValue(node, "useRegex", "false"));
-        var buildAction = Helper.AttributeValue(node, "buildAction", string.Empty);
+        path = Helper.AttributeValue(node, "path", ".");
+        pattern = Helper.AttributeValue(node, "pattern", "*");
+        destination = Helper.AttributeValue(node, "destination", string.Empty);
+        recurse = (bool)Helper.TranslateValue(typeof(bool), Helper.AttributeValue(node, "recurse", "false"));
+        useRegex = (bool)Helper.TranslateValue(typeof(bool), Helper.AttributeValue(node, "useRegex", "false"));
+        buildAction = Helper.AttributeValue(node, "buildAction", string.Empty);
         if (buildAction != string.Empty)
             BuildAction = (BuildAction)Enum.Parse(typeof(BuildAction), buildAction);
 
@@ -242,6 +242,33 @@ public class MatchNode : DataNode
         m_Regex = null;
     }
 
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement main = doc.CreateElement("Match");
+
+        main.SetAttribute("path", path);
+        main.SetAttribute("pattern", pattern);
+        main.SetAttribute("destination", destination);
+        main.SetAttribute("recurse", recurse ? bool.TrueString : bool.FalseString);
+        main.SetAttribute("useRegex", useRegex ? bool.TrueString : bool.FalseString);
+        main.SetAttribute("buildAction", buildAction);
+        main.SetAttribute("resourceName", ResourceName);
+        main.SetAttribute("copyToOutput", CopyToOutput.ToString());
+        main.SetAttribute("link", IsLink ? bool.TrueString : bool.FalseString);
+        main.SetAttribute("linkPath", LinkPath);
+        main.SetAttribute("preservePath", PreservePath ? bool.TrueString : bool.FalseString);
+
+
+        foreach(ExcludeNode exclude in m_Exclusions)
+        {
+            exclude.Write(doc, main);
+        }
+
+
+
+        current.AppendChild(main);
+    }
+
     #endregion
 
     #region Fields
@@ -249,6 +276,13 @@ public class MatchNode : DataNode
     private readonly List<string> m_Files = new();
     private Regex m_Regex;
     private readonly List<ExcludeNode> m_Exclusions = new();
+
+    private string path;
+    private string pattern;
+    private string destination;
+    private bool recurse;
+    private bool useRegex;
+    private string buildAction;
 
     #endregion
 
@@ -260,25 +294,25 @@ public class MatchNode : DataNode
 
     /// <summary>
     /// </summary>
-    public BuildAction? BuildAction { get; private set; }
+    public BuildAction? BuildAction { get; internal set; }
 
-    public string DestinationPath { get; private set; } = "";
+    public string DestinationPath { get; internal set; } = "";
 
     /// <summary>
     /// </summary>
     public SubType? SubType { get; }
 
-    public CopyToOutput CopyToOutput { get; private set; }
+    public CopyToOutput CopyToOutput { get; internal set; }
 
-    public bool IsLink { get; private set; }
+    public bool IsLink { get; internal set; }
 
-    public string LinkPath { get; private set; }
+    public string LinkPath { get; internal set; }
 
     /// <summary>
     /// </summary>
-    public string ResourceName { get; private set; } = "";
+    public string ResourceName { get; internal set; } = "";
 
-    public bool PreservePath { get; private set; }
+    public bool PreservePath { get; internal set; }
 
     #endregion
 }

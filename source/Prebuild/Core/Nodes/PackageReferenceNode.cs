@@ -60,6 +60,16 @@ public class PackageReferenceNode : DataNode, IComparable
         PrivateAssets = Helper.AttributeValue(node, "private", PrivateAssets);
     }
 
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement reference = doc.CreateElement("PackageReference");
+        reference.SetAttribute("name", Name);
+        reference.SetAttribute("version", Version);
+        reference.SetAttribute("private", PrivateAssets);
+
+        current.AppendChild(reference);
+    }
+
     #endregion
 
     #region Fields
@@ -72,15 +82,15 @@ public class PackageReferenceNode : DataNode, IComparable
     ///     Gets the name.
     /// </summary>
     /// <value>The name.</value>
-    public string Name { get; private set; } = "unknown";
+    public string Name { get; internal set; } = "unknown";
 
     /// <summary>
     ///     Gets the version.
     /// </summary>
     /// <value>The version.</value>
-    public string Version { get; private set; }
+    public string Version { get; internal set; }
 
-    public string PrivateAssets { get; private set; }
+    public string PrivateAssets { get; internal set; }
 
     #endregion
 }

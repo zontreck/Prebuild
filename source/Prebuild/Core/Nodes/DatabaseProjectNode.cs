@@ -14,11 +14,11 @@ public class DatabaseProjectNode : DataNode
 
     public Guid Guid { get; } = Guid.NewGuid();
 
-    public string Name { get; private set; }
+    public string Name { get; internal set; }
 
-    public string Path { get; private set; }
+    public string Path { get; internal set; }
 
-    public string FullPath { get; private set; }
+    public string FullPath { get; internal set; }
 
     public IEnumerable<DatabaseReferenceNode> References => references;
 
@@ -63,5 +63,25 @@ public class DatabaseProjectNode : DataNode
         }
 
         base.Parse(node);
+    }
+
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+
+        XmlElement main = doc.CreateElement("DatabaseProject");
+        main.SetAttribute("name", Name);
+        main.SetAttribute("path", Path);
+
+
+        foreach(AuthorNode author in authors)
+        {
+            author.Write(doc, main);
+        }
+        foreach(DatabaseReferenceNode databaseReference in references)
+        {
+            databaseReference.Write(doc, main);
+        }
+
+        current.AppendChild(main);
     }
 }

@@ -42,10 +42,12 @@ POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
+using System.Xml.Serialization;
 using Prebuild.Core.Attributes;
 using Prebuild.Core.Interfaces;
 using Prebuild.Core.Nodes;
@@ -94,10 +96,10 @@ public class Kernel : IDisposable
 
     private readonly Dictionary<string, NodeEntry> m_Nodes = new();
 
-    private string m_Target;
+    private string m_Target = "vs2022";
     private bool cmdlineTargetFramework;
     private FrameworkVersion m_TargetFramework; //Overrides all project settings
-    public string ForcedConditionals { get; private set; }
+    public string ForcedConditionals { get; internal set; }
 
     private string m_Clean;
     private string[] m_RemoveDirectories;
@@ -113,7 +115,7 @@ public class Kernel : IDisposable
     ///     Gets a value indicating whether [pause after finish].
     /// </summary>
     /// <value><c>true</c> if [pause after finish]; otherwise, <c>false</c>.</value>
-    public bool PauseAfterFinish { get; private set; }
+    public bool PauseAfterFinish { get; internal set; }
 
     /// <summary>
     ///     Gets the instance.
@@ -132,7 +134,7 @@ public class Kernel : IDisposable
     ///     Gets the command line.
     /// </summary>
     /// <value>The command line.</value>
-    public CommandLineCollection CommandLine { get; private set; }
+    public CommandLineCollection CommandLine { get; internal set; }
 
     /// <summary>
     ///     Gets the targets.
@@ -144,13 +146,13 @@ public class Kernel : IDisposable
     ///     Gets the log.
     /// </summary>
     /// <value>The log.</value>
-    public Log Log { get; private set; }
+    public Log Log { get; internal set; }
 
     /// <summary>
     ///     Gets the current working directory.
     /// </summary>
     /// <value>The current working directory.</value>
-    public CurrentDirectory CurrentWorkingDirectory { get; private set; }
+    public CurrentDirectory CurrentWorkingDirectory { get; internal set; }
 
     /// <summary>
     ///     Gets the solutions.
@@ -163,7 +165,7 @@ public class Kernel : IDisposable
     ///     being processed
     /// </summary>
     /// <value>The XmlDocument object</value>
-    public XmlDocument CurrentDoc { get; private set; }
+    public XmlDocument CurrentDoc { get; internal set; }
 
     #endregion
 
@@ -270,7 +272,8 @@ public class Kernel : IDisposable
         Log.Write("John Hurliman (john.hurliman@intel.com),");
         Log.Write("WhiteCore build 2015 (greythane@gmail.com),");
         Log.Write("OpenSimulator build 2017 Ubit Umarov,");
-        Log.Write("");
+        Log.Write("Aria's Creations 2023 - Tara Piccari");
+        Log.Write();
         Log.Write("See 'prebuild /usage' for help");
         Log.Write();
     }
@@ -645,6 +648,63 @@ public class Kernel : IDisposable
 
         var file = "./prebuild.xml";
         if (CommandLine.WasPassed("file")) file = CommandLine["file"];
+
+        if(CommandLine.WasPassed("init"))
+        {
+            Log.Write("Initializing a skeleton Prebuild.xml file");
+            // Initialize a new Prebuild file
+            // Write out a dummy file with a Solution that consists of a dummy project.
+
+            XmlDocument doc = new XmlDocument();
+            XmlElement elem = doc.CreateElement("Prebuild");
+
+            var ver = doc.CreateAttribute("version");
+            ver.InnerText = "1.10";
+            elem.Attributes.Append(ver);
+
+            var ns = doc.CreateAttribute("xmlns");
+            ns.InnerText = "http://dnpb.sourceforge.net/schemas/prebuild-1.10.xsd";
+            elem.Attributes.Append(ns);
+
+            doc.AppendChild(elem);
+
+            SolutionNode sol = new SolutionNode();
+            sol.Name = "Example";
+            sol.Version = "1.0";
+            sol.DefaultFramework = FrameworkVersion.net7_0;
+
+            ProjectNode proj = new ProjectNode();
+            proj.Name = "Hello World";
+            proj.Path = "source/example";
+            var Opts = new OptionsNode();
+            Opts.OutputPath = "../../bin/";
+
+            ConfigurationNode debug = new ConfigurationNode();
+            debug.Name = "Debug";
+            debug.Options = Opts;
+
+            ConfigurationNode release = new ConfigurationNode();
+            release.Name = "Release";
+            release.Options = Opts;
+
+            proj.ConfigurationsTable.Add("Debug", debug);
+            proj.ConfigurationsTable.Add("Release", release);
+
+
+
+            sol.ProjectsTable.Add(proj.Name, proj);
+
+            sol.Write(doc, elem);
+
+
+            using (FileStream fs = new FileStream(file, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+            {
+                doc.Save(fs);
+            }
+
+            Log.Write("Initialization completed");
+            return;
+        }
 
         ProcessFile(file);
 

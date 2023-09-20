@@ -61,6 +61,18 @@ public class ReferenceNode : DataNode, IComparable
         Version = Helper.AttributeValue(node, "version", Version);
     }
 
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement cur = doc.CreateElement("Reference");
+        cur.SetAttribute("name", Name);
+        cur.SetAttribute("path", Path);
+        cur.SetAttribute("version", Version);
+        cur.SetAttribute("localCopy", m_LocalCopy);
+
+
+        current.AppendChild(cur);
+    }
+
     #endregion
 
     #region Fields
@@ -75,13 +87,13 @@ public class ReferenceNode : DataNode, IComparable
     ///     Gets the name.
     /// </summary>
     /// <value>The name.</value>
-    public string Name { get; private set; } = "unknown";
+    public string Name { get; internal set; } = "unknown";
 
     /// <summary>
     ///     Gets the path.
     /// </summary>
     /// <value>The path.</value>
-    public string Path { get; private set; }
+    public string Path { get; internal set; }
 
     /// <summary>
     ///     Gets a value indicating whether [local copy specified].
@@ -106,7 +118,7 @@ public class ReferenceNode : DataNode, IComparable
     ///     Gets the version.
     /// </summary>
     /// <value>The version.</value>
-    public string Version { get; private set; }
+    public string Version { get; internal set; }
 
     #endregion
 }

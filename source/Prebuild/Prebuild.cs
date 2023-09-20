@@ -105,6 +105,7 @@ internal class Prebuild
         Console.WriteLine("/ppo             Pre-process the file, but perform no other processing");
         Console.WriteLine("/pause           Pauses the application after execution to view the output");
         Console.WriteLine("/yes             Default to yes to any questions asked");
+        Console.WriteLine("/init            Initializes a skeleton Prebuild file");
         Console.WriteLine();
         Console.WriteLine("See 'prebuild /showtargets for a list of available targets");
         Console.WriteLine("See readme.txt or check out http://dnpb.sourceforge.net for more information");

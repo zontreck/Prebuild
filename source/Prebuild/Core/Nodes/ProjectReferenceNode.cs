@@ -59,6 +59,15 @@ public class ProjectReferenceNode : DataNode, IComparable
         Include = Helper.AttributeValue(node, "include", Include);
     }
 
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement cur = doc.CreateElement("ProjectReference");
+        cur.SetAttribute("name", Name);
+        cur.SetAttribute("include", Include);
+
+        current.AppendChild(cur);
+    }
+
     #endregion
 
     #region Fields
@@ -71,13 +80,13 @@ public class ProjectReferenceNode : DataNode, IComparable
     ///     Gets the name.
     /// </summary>
     /// <value>The name.</value>
-    public string Name { get; private set; } = "unknown";
+    public string Name { get; internal set; } = "unknown";
 
     /// <summary>
     ///     Gets the path.
     /// </summary>
     /// <value>The path.</value>
-    public string Include { get; private set; }
+    public string Include { get; internal set; }
 
     #endregion
 }

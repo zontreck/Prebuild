@@ -40,16 +40,9 @@ public class FilesNode : DataNode
 {
     #region Fields
 
-    private readonly List<string> m_Files = new();
-    private readonly Dictionary<string, BuildAction> m_BuildActions = new();
-    private readonly Dictionary<string, SubType> m_SubTypes = new();
-    private readonly Dictionary<string, string> m_ResourceNames = new();
-    private readonly Dictionary<string, CopyToOutput> m_CopyToOutputs = new();
-    private readonly Dictionary<string, bool> m_Links = new();
-    private readonly Dictionary<string, string> m_LinkPaths = new();
-    private readonly Dictionary<string, bool> m_PreservePaths = new();
-    private readonly Dictionary<string, string> m_DestinationPath = new();
-    private readonly NameValueCollection m_CopyFiles = new();
+
+    private readonly Dictionary<string, FileNode> m_Files = new();
+    private readonly Dictionary<string, MatchNode> m_Matches = new();
 
     #endregion
 
@@ -57,9 +50,37 @@ public class FilesNode : DataNode
 
     public int Count => m_Files.Count;
 
-    public string[] Destinations => m_CopyFiles.AllKeys;
+    public int CopyFiles
+    {
+        get
+        {
+            int cur = 0;
+            foreach (var item in m_Files)
+            {
+                if(item.Value.BuildAction == BuildAction.Copy) cur++;
+            }
+            foreach(var item in m_Matches)
+            {
+                if(item.Value.BuildAction == BuildAction.Copy) cur++;
+            }
 
-    public int CopyFiles => m_CopyFiles.Count;
+            return cur;
+        }
+    }
+
+    public string[] Destinations
+    {
+        get
+        {
+            List<string> dests = new();
+            foreach(var item in m_Matches)
+            {
+                dests.Add(item.Value.DestinationPath);
+            }
+
+            return dests.ToArray();
+        }
+    }
 
     #endregion
 
@@ -67,64 +88,84 @@ public class FilesNode : DataNode
 
     public BuildAction GetBuildAction(string file)
     {
-        if (!m_BuildActions.ContainsKey(file)) return BuildAction.Compile;
-
-        return m_BuildActions[file];
+        if(m_Files.ContainsKey(file))
+        {
+            return m_Files[file].BuildAction;
+        }
+        if(m_Matches.ContainsKey(file))
+        {
+            return (BuildAction)m_Matches[file].BuildAction;
+        }
+        return BuildAction.Compile;
     }
 
     public string GetDestinationPath(string file)
     {
-        if (!m_DestinationPath.ContainsKey(file)) return null;
-        return m_DestinationPath[file];
+        if (!m_Matches.ContainsKey(file)) return null;
+        return m_Matches[file].DestinationPath;
     }
 
     public string[] SourceFiles(string dest)
     {
-        return m_CopyFiles.GetValues(dest);
+        List<string> files = new();
+        foreach(MatchNode node in m_Matches.Values)
+        {
+            if (node.DestinationPath.Equals(dest))
+            {
+                files.AddRange(node.Files);
+            }
+        }
+        return files.ToArray();
     }
 
     public CopyToOutput GetCopyToOutput(string file)
     {
-        if (!m_CopyToOutputs.ContainsKey(file)) return CopyToOutput.Never;
-        return m_CopyToOutputs[file];
+        if (m_Files.ContainsKey(file)) return m_Files[file].CopyToOutput;
+        if(m_Matches.ContainsKey(file))return m_Matches[file].CopyToOutput;
+        return CopyToOutput.Never;
     }
 
     public bool GetIsLink(string file)
     {
-        if (!m_Links.ContainsKey(file)) return false;
-        return m_Links[file];
+        if (m_Files.ContainsKey(file)) return m_Files[file].IsLink;
+        if (m_Matches.ContainsKey(file)) return m_Matches[file].IsLink;
+        return false;
     }
 
     public bool Contains(string file)
     {
-        return m_Files.Contains(file);
+        return m_Files.ContainsKey(file) || m_Matches.ContainsKey(file);
     }
 
     public string GetLinkPath(string file)
     {
-        if (!m_LinkPaths.ContainsKey(file)) return string.Empty;
-        return m_LinkPaths[file];
+        if (m_Files.ContainsKey(file)) return m_Files[file].LinkPath;
+        if (m_Matches.ContainsKey(file)) return m_Matches[file].LinkPath;
+        return string.Empty;
     }
 
     public SubType GetSubType(string file)
     {
-        if (!m_SubTypes.ContainsKey(file)) return SubType.Code;
+        if (m_Files.ContainsKey(file)) return m_Files[file].SubType;
+        if (m_Matches.ContainsKey(file)) return (SubType)m_Matches[file].SubType;
 
-        return m_SubTypes[file];
+        return SubType.Code;
     }
 
     public string GetResourceName(string file)
     {
-        if (!m_ResourceNames.ContainsKey(file)) return string.Empty;
+        if (m_Files.ContainsKey(file)) return m_Files[file].ResourceName;
+        if (m_Matches.ContainsKey(file)) return m_Matches[file].ResourceName;
 
-        return m_ResourceNames[file];
+        return string.Empty;
     }
 
     public bool GetPreservePath(string file)
     {
-        if (!m_PreservePaths.ContainsKey(file)) return false;
+        if (m_Files.ContainsKey(file)) return m_Files[file].PreservePath;
+        if (m_Matches.ContainsKey(file)) return m_Matches[file].PreservePath;
 
-        return m_PreservePaths[file];
+        return false;
     }
 
     public override void Parse(XmlNode node)
@@ -133,60 +174,51 @@ public class FilesNode : DataNode
         foreach (XmlNode child in node.ChildNodes)
         {
             var dataNode = Kernel.Instance.ParseNode(child, this);
-            if (dataNode is FileNode)
+            if (dataNode is FileNode fn)
             {
-                var fileNode = (FileNode)dataNode;
-                if (fileNode.IsValid)
-                    if (!m_Files.Contains(fileNode.Path))
+                if (fn.IsValid)
+                    if (!m_Files.ContainsKey(fn.Path))
                     {
-                        m_Files.Add(fileNode.Path);
-                        m_BuildActions[fileNode.Path] = fileNode.BuildAction;
-                        m_SubTypes[fileNode.Path] = fileNode.SubType;
-                        m_ResourceNames[fileNode.Path] = fileNode.ResourceName;
-                        m_PreservePaths[fileNode.Path] = fileNode.PreservePath;
-                        m_Links[fileNode.Path] = fileNode.IsLink;
-                        m_LinkPaths[fileNode.Path] = fileNode.LinkPath;
-                        m_CopyToOutputs[fileNode.Path] = fileNode.CopyToOutput;
+                        m_Files.Add(fn.Path, fn);
                     }
             }
-            else if (dataNode is MatchNode)
+            else if (dataNode is MatchNode mn)
             {
-                foreach (var file in ((MatchNode)dataNode).Files)
+                foreach (var file in mn.Files)
                 {
-                    var matchNode = (MatchNode)dataNode;
-                    if (!m_Files.Contains(file))
-                    {
-                        m_Files.Add(file);
-                        if (matchNode.BuildAction == null)
-                            m_BuildActions[file] = GetBuildActionByFileName(file);
-                        else
-                            m_BuildActions[file] = matchNode.BuildAction.Value;
-
-                        if (matchNode.BuildAction == BuildAction.Copy)
-                        {
-                            m_CopyFiles.Add(matchNode.DestinationPath, file);
-                            m_DestinationPath[file] = matchNode.DestinationPath;
-                        }
-
-                        m_SubTypes[file] = matchNode.SubType == null
-                            ? GetSubTypeByFileName(file)
-                            : matchNode.SubType.Value;
-                        m_ResourceNames[file] = matchNode.ResourceName;
-                        m_PreservePaths[file] = matchNode.PreservePath;
-                        m_Links[file] = matchNode.IsLink;
-                        m_LinkPaths[file] = matchNode.LinkPath;
-                        m_CopyToOutputs[file] = matchNode.CopyToOutput;
-                    }
+                    m_Matches.Add(file, mn);
+                    
                 }
             }
         }
+    }
+
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement main = doc.CreateElement("Files");
+        foreach(FileNode fi in m_Files.Values)
+        {
+            fi.Write(doc, main);
+        }
+
+        foreach(MatchNode mn in m_Matches.Values)
+        {
+            mn.Write(doc, main);
+        }
+
+
+        current.AppendChild(main);
     }
 
     // TODO: Check in to why StringCollection's enumerator doesn't implement
     // IEnumerator?
     public IEnumerator<string> GetEnumerator()
     {
-        return m_Files.GetEnumerator();
+        List<string> concat = new();
+        concat.AddRange(m_Files.Keys);
+        concat.AddRange(m_Matches.Keys);
+
+        return concat.GetEnumerator();
     }
 
     #endregion

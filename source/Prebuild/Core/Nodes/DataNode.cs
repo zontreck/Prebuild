@@ -27,6 +27,7 @@ IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY O
 
 using System.IO;
 using System.Xml;
+using System.Xml.Serialization;
 using Prebuild.Core.Interfaces;
 
 namespace Prebuild.Core.Nodes;
@@ -56,6 +57,16 @@ public abstract class DataNode : IDataNode
     public virtual void Parse(XmlNode node)
     {
     }
+
+    /// <summary>
+    /// Serializes to the specified node
+    /// </summary>
+    /// <param name="doc">The document</param>
+    /// <param name="current">The current node</param>
+    public virtual void Write(XmlDocument doc, XmlElement current) {
+        
+    }
+
 
     public BuildAction GetBuildActionByFileName(string fileName)
     {

@@ -133,7 +133,7 @@ public class ConfigurationNode : DataNode, ICloneable, IComparable
     ///     Gets the name.
     /// </summary>
     /// <value>The name.</value>
-    public string Name { get; private set; } = "unknown";
+    public string Name { get; internal set; } = "unknown";
 
     /// <summary>
     ///     Gets the name and platform for the configuration.
@@ -185,6 +185,18 @@ public class ConfigurationNode : DataNode, ICloneable, IComparable
     public void CopyTo(ConfigurationNode conf)
     {
         Options.CopyTo(conf.Options);
+    }
+
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement main = doc.CreateElement("Configuration");
+        main.SetAttribute("name", Name);
+        main.SetAttribute("platform", Platform);
+
+
+        Options.Write(doc, main);
+
+        current.AppendChild(main);
     }
 
     #endregion

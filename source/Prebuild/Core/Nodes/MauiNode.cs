@@ -11,7 +11,7 @@ namespace Prebuild.Core.Nodes
     [DataNode("Maui")]
     public class MauiNode : DataNode
     {
-        public MauiTitle applicationTitle { get; private set; } = null;
+        public MauiTitle applicationTitle { get; internal set; } = null;
 
         public override void Parse(XmlNode node)
         {
@@ -23,6 +23,14 @@ namespace Prebuild.Core.Nodes
                     if (dataNode is MauiTitle title) applicationTitle = title;
                 }
             }
+        }
+
+        public override void Write(XmlDocument doc, XmlElement current)
+        {
+            XmlElement maui = doc.CreateElement("Maui");
+            applicationTitle.Write(doc, maui);
+
+            current.AppendChild(maui);
         }
 
         public override string ToString()

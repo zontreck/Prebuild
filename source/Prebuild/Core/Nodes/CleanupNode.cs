@@ -66,5 +66,15 @@ public class CleanupNode : DataNode
         }
     }
 
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement main = doc.CreateElement("Cleanup");
+        foreach(CleanFilesNode n in CleanFiles)
+        {
+            n.Write(doc, main);
+        }
+        current.AppendChild(main);
+    }
+
     #endregion
 }

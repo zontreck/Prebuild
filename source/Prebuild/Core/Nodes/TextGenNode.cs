@@ -16,7 +16,7 @@ namespace Prebuild.Core.Nodes
         #region Values
         private string m_Name;
         private string m_OutputName;
-        private List<string> m_Libs = new();
+        private List<ReferenceNode> m_Libs = new();
         private string m_Tool;
         
 
@@ -32,9 +32,9 @@ namespace Prebuild.Core.Nodes
             foreach (XmlNode childNode in node.ChildNodes)
             {
                 var data = Kernel.Instance.ParseNode(childNode, this);
-                if(data is ReferenceNode)
+                if(data is ReferenceNode rn)
                 {
-                    m_Libs.Add(((ReferenceNode)data).Name);
+                    m_Libs.Add(rn);
                 }
             }
 
@@ -52,6 +52,22 @@ namespace Prebuild.Core.Nodes
             }
             else m_OutputName = Path.ChangeExtension(m_OutputName, ".SnapWrap.cs");
 
+        }
+
+        public override void Write(XmlDocument doc, XmlElement current)
+        {
+            XmlElement cur = doc.CreateElement("TextGen");
+            cur.SetAttribute("name", m_Name);
+            cur.SetAttribute("output", m_OutputName);
+            cur.SetAttribute("tool", m_Tool);
+
+            foreach(var reference in m_Libs)
+            {
+                reference.Write(doc, cur);
+            }
+            cur.SetAttribute("sourceInSolution", SourceInSolution ? bool.TrueString : bool.FalseString);
+
+            current.AppendChild(cur);
         }
         #endregion
 
@@ -76,11 +92,17 @@ namespace Prebuild.Core.Nodes
         {
             get
             {
-                return String.Join("..", m_Libs);
+                List<string> tmp = new();
+                foreach(var rn in m_Libs)
+                {
+                    tmp.Add(rn.Name);
+                }
+
+                return String.Join("..", tmp);
             }
         }
 
-        public bool SourceInSolution { get; private set; } = false;
+        public bool SourceInSolution { get; internal set; } = false;
 
         public string SourceDirectory
         {

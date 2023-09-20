@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
+using System.Xml.Serialization;
 using Prebuild.Core.Attributes;
 using Prebuild.Core.Interfaces;
 using Prebuild.Core.Utilities;
@@ -136,6 +137,46 @@ public class SolutionNode : DataNode
         }
     }
 
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement sol = doc.CreateElement("Solution");
+        sol.SetAttribute("name", Name);
+        sol.SetAttribute("activeConfig", ActiveConfig);
+        sol.SetAttribute("path", Path);
+        sol.SetAttribute("version", Version);
+        sol.SetAttribute("frameworkVersion", DefaultFramework.ToString());
+        if(Options != null)
+            Options.Write(doc, sol);
+
+        if (Files != null) Files.Write(doc, sol);
+
+        if(Configurations != null) 
+            foreach(ConfigurationNode conf in Configurations)
+            {
+                conf.Write(doc, sol);
+            }
+
+        foreach(ProjectNode proj in Projects)
+        {
+            proj.Write(doc, sol);
+        }
+
+        foreach(SolutionNode solX in Solutions)
+        {
+            solX.Write(doc, sol);
+        }
+
+        foreach(DatabaseProjectNode db in DatabaseProjects)
+        {
+            db.Write(doc, sol);
+        }
+
+        if(Cleanup != null)
+            Cleanup.Write(doc, sol);
+
+        current.AppendChild(sol);
+    }
+
     #endregion
 
     #region Fields
@@ -179,37 +220,37 @@ public class SolutionNode : DataNode
     ///     Gets the name.
     /// </summary>
     /// <value>The name.</value>
-    public string Name { get; private set; } = "unknown";
+    public string Name { get; internal set; } = "unknown";
 
     /// <summary>
     ///     Gets the path.
     /// </summary>
     /// <value>The path.</value>
-    public string Path { get; private set; } = "";
+    public string Path { get; internal set; } = "";
 
     /// <summary>
     ///     Gets the full path.
     /// </summary>
     /// <value>The full path.</value>
-    public string FullPath { get; private set; } = "";
+    public string FullPath { get; internal set; } = "";
 
     /// <summary>
     ///     Gets the version.
     /// </summary>
     /// <value>The version.</value>
-    public string Version { get; private set; } = "1.0.0";
+    public string Version { get; internal set; } = "1.0.0";
 
     /// <summary>
     ///     Gets the options.
     /// </summary>
     /// <value>The options.</value>
-    public OptionsNode Options { get; private set; }
+    public OptionsNode Options { get; internal set; }
 
     /// <summary>
     ///     Gets the files.
     /// </summary>
     /// <value>The files.</value>
-    public FilesNode Files { get; private set; }
+    public FilesNode Files { get; internal set; }
 
     /// <summary>
     ///     Gets the configurations.

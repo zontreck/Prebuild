@@ -12,13 +12,21 @@ namespace Prebuild.Core.Nodes
     [DataNode("InternalsVisibleTo")]
     public class InternalsNode : DataNode
     {
-        public string Name { get; private set; }
+        public string Name { get; internal set; }
 
         #region Methods
         public override void Parse(XmlNode node)
         {
             base.Parse(node);
             Name = Helper.AttributeValue(node, "name", "");
+        }
+
+        public override void Write(XmlDocument doc, XmlElement current)
+        {
+            XmlElement main = doc.CreateElement("InternalsVisibleTo");
+            main.SetAttribute("name", Name);
+
+            current.AppendChild(main);
         }
         #endregion
     }

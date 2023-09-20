@@ -27,6 +27,7 @@ IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY O
 
 using System;
 using System.Xml;
+using System.Xml.Linq;
 using Prebuild.Core.Attributes;
 using Prebuild.Core.Utilities;
 
@@ -47,7 +48,7 @@ public class AuthorNode : DataNode
     ///     Gets the signature.
     /// </summary>
     /// <value>The signature.</value>
-    public string Signature { get; private set; }
+    public string Signature { get; internal set; }
 
     #endregion
 
@@ -65,6 +66,14 @@ public class AuthorNode : DataNode
         if (Signature == null) Signature = "";
 
         Signature = Signature.Trim();
+    }
+
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+
+        XmlElement elem = doc.CreateElement("Author");
+        elem.InnerText = Signature;
+        current.AppendChild(elem);
     }
 
     #endregion

@@ -95,22 +95,22 @@ public enum ClrVersion
 
 public class SystemPackage
 {
-    public string Name { get; private set; }
+    public string Name { get; internal set; }
 
-    public string Version { get; private set; }
+    public string Version { get; internal set; }
 
-    public string Description { get; private set; }
+    public string Description { get; internal set; }
 
-    public ClrVersion TargetVersion { get; private set; }
+    public ClrVersion TargetVersion { get; internal set; }
 
     // The package is part of the mono SDK
     public bool IsCorePackage => Name == "mono";
 
     // The package has been registered by an add-in, and is not installed
     // in the system.
-    public bool IsInternalPackage { get; private set; }
+    public bool IsInternalPackage { get; internal set; }
 
-    public string[] Assemblies { get; private set; }
+    public string[] Assemblies { get; internal set; }
 
     public void Initialize(string name,
         string version,

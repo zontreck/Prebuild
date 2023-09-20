@@ -261,6 +261,85 @@ public class ProjectNode : DataNode, IComparable
         }
     }
 
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement proj = doc.CreateElement("Project");
+
+        proj.SetAttribute("name", Name);
+        proj.SetAttribute("path", Path);
+        proj.SetAttribute("filterGroups", FilterGroups);
+        proj.SetAttribute("version", Version);
+        proj.SetAttribute("icon", AppIcon);
+        proj.SetAttribute("appmanifest", ApplicationManifest);
+        proj.SetAttribute("configFile", ConfigFile);
+        proj.SetAttribute("designerFolder", DesignerFolder);
+        proj.SetAttribute("assemblyName", AssemblyName);
+        proj.SetAttribute("scanFiles", ScanFiles ? bool.TrueString : bool.FalseString);
+        proj.SetAttribute("language", Language);
+        proj.SetAttribute("type", Type.ToString());
+        proj.SetAttribute("runtime", Runtime.ToString());
+        proj.SetAttribute("frameworkVersion", m_Framework.ToString());
+        proj.SetAttribute("startupObject", StartupObject);
+        proj.SetAttribute("rootNamespace", RootNamespace);
+        proj.SetAttribute("copyDependencies", CopyLocalLockFileAssemblies ? bool.TrueString : bool.FalseString);
+        proj.SetAttribute("guid", Guid.ToString());
+        proj.SetAttribute("generateAssemblyInfoFile", GenerateAssemblyInfoFile ? bool.TrueString : bool.FalseString);
+        proj.SetAttribute("winforms", UseWindowsForms ?  bool.TrueString : bool.FalseString);
+        proj.SetAttribute("debugStartParameters", DebugStartParameters);
+
+        foreach(ConfigurationNode conf in Configurations)
+        {
+            conf.Write(doc, proj);
+        }
+
+        foreach(ReferencePathNode rpn in ReferencePaths)
+        {
+            rpn.Write(doc, proj);
+        }
+
+        foreach(ReferenceNode refer in References)
+        {
+            refer.Write(doc, proj);
+        }
+
+        foreach(PackageReferenceNode pkg in PackageReferences)
+        {
+            pkg.Write(doc, proj);
+        }
+
+        foreach(ProjectReferenceNode prj in ProjectReferences)
+        {
+            prj.Write(doc, proj);
+        }
+
+        foreach(AuthorNode auth in Authors)
+        {
+            auth.Write(doc, proj);
+        }
+
+        Files.Write(doc, proj);
+        foreach(TextGenNode gen in TextGenNodes)
+        {
+            gen.Write(doc, proj);
+        }
+
+        if(MauiSettings!=null)
+            MauiSettings.Write(doc, proj);
+        if (Nullable)
+        {
+            XmlElement nu = doc.CreateElement("Nullable");
+            proj.AppendChild(nu);
+        }
+
+        if(InternalsVisible!=null)
+            InternalsVisible.Write(doc, proj);
+
+
+
+
+        current.AppendChild(proj);
+    }
+
     #endregion
 
     #region Fields
@@ -303,28 +382,28 @@ public class ProjectNode : DataNode, IComparable
     ///     Gets the name.
     /// </summary>
     /// <value>The name.</value>
-    public string Name { get; private set; } = "unknown";
+    public string Name { get; internal set; } = "unknown";
 
     /// <summary>
     /// Contains settings for DotNet Maui (7.0+)
     /// Default is null, which indicates not to include any Maui content in the project file.
     /// </summary>
-    public MauiNode MauiSettings { get; private set; } = null;
+    public MauiNode MauiSettings { get; internal set; } = null;
 
     /// <summary>
     /// Marks the visibility for internals
     /// </summary>
-    public InternalsNode InternalsVisible { get; private set; }
+    public InternalsNode InternalsVisible { get; internal set; }
 
     /// <summary>
     /// Enables Windows forms on a dotnet project.
     /// </summary>
-    public bool UseWindowsForms { get; private set; } = false;
+    public bool UseWindowsForms { get; internal set; } = false;
 
     /// <summary>
     /// Scans the directory for files
     /// </summary>
-    public bool ScanFiles {get;private set;} = true;
+    public bool ScanFiles {get;internal set;} = true;
 
     /// <summary>
     ///     The version of the .NET Framework to compile under
@@ -353,18 +432,18 @@ public class ProjectNode : DataNode, IComparable
     ///     Gets the path.
     /// </summary>
     /// <value>The path.</value>
-    public string Path { get; private set; } = "";
+    public string Path { get; internal set; } = "";
 
     /// <summary>
     ///     Gets the filter groups.
     /// </summary>
     /// <value>The filter groups.</value>
-    public string FilterGroups { get; private set; } = "";
+    public string FilterGroups { get; internal set; } = "";
 
     /// <summary>
     /// Indicates project nullable attribute
     /// </summary>
-    public bool Nullable { get; private set; } = false;
+    public bool Nullable { get; internal set; } = false;
     public string NullableStr 
     { 
         get
@@ -377,65 +456,65 @@ public class ProjectNode : DataNode, IComparable
     ///     Gets the project's version
     /// </summary>
     /// <value>The project's version.</value>
-    public string Version { get; private set; } = "";
+    public string Version { get; internal set; } = "";
 
     /// <summary>
     ///     Gets the full path.
     /// </summary>
     /// <value>The full path.</value>
-    public string FullPath { get; private set; } = "";
+    public string FullPath { get; internal set; } = "";
 
     /// <summary>
     ///     Gets the name of the assembly.
     /// </summary>
     /// <value>The name of the assembly.</value>
-    public string AssemblyName { get; private set; }
+    public string AssemblyName { get; internal set; }
 
     /// <summary>
     ///     Copies the local dependencies to the output on build.
     ///     This is the same behavior as publish.
     /// </summary>
-    public bool CopyLocalLockFileAssemblies { get; private set; }
+    public bool CopyLocalLockFileAssemblies { get; internal set; }
 
     /// <summary>
     ///     Gets the app icon.
     /// </summary>
     /// <value>The app icon.</value>
-    public string AppIcon { get; private set; } = "";
+    public string AppIcon { get; internal set; } = "";
 
     /// <summary>
     ///     Gets the Application Manifest.
     /// </summary>
     /// <value>The Application Manifest.</value>
-    public string ApplicationManifest { get; private set; } = "";
+    public string ApplicationManifest { get; internal set; } = "";
 
     /// <summary>
     ///     Gets the app icon.
     /// </summary>
     /// <value>The app icon.</value>
-    public string ConfigFile { get; private set; } = "";
+    public string ConfigFile { get; internal set; } = "";
 
     /// <summary>
     /// </summary>
-    public string DesignerFolder { get; private set; } = "";
+    public string DesignerFolder { get; internal set; } = "";
 
     /// <summary>
     ///     Gets the language.
     /// </summary>
     /// <value>The language.</value>
-    public string Language { get; private set; } = "C#";
+    public string Language { get; internal set; } = "C#";
 
     /// <summary>
     ///     Gets the type.
     /// </summary>
     /// <value>The type.</value>
-    public ProjectType Type { get; private set; } = ProjectType.Exe;
+    public ProjectType Type { get; internal set; } = ProjectType.Exe;
 
     /// <summary>
     ///     Gets the runtime.
     /// </summary>
     /// <value>The runtime.</value>
-    public ClrRuntime Runtime { get; private set; } = ClrRuntime.Microsoft;
+    public ClrRuntime Runtime { get; internal set; } = ClrRuntime.Microsoft;
 
     /// <summary>
     /// </summary>
@@ -445,13 +524,13 @@ public class ProjectNode : DataNode, IComparable
     ///     Gets the startup object.
     /// </summary>
     /// <value>The startup object.</value>
-    public string StartupObject { get; private set; } = "";
+    public string StartupObject { get; internal set; } = "";
 
     /// <summary>
     ///     Gets the root namespace.
     /// </summary>
     /// <value>The root namespace.</value>
-    public string RootNamespace { get; private set; }
+    public string RootNamespace { get; internal set; }
 
     /// <summary>
     ///     Gets the configurations.
@@ -470,7 +549,7 @@ public class ProjectNode : DataNode, IComparable
     /// <summary>
     /// Gets the text generator nodes
     /// </summary>
-    public List<TextGenNode> TextGenNodes { get; private set; } = new();
+    public List<TextGenNode> TextGenNodes { get; internal set; } = new();
 
 
     /// <summary>
@@ -545,7 +624,7 @@ public class ProjectNode : DataNode, IComparable
     ///     Gets the files.
     /// </summary>
     /// <value>The files.</value>
-    public FilesNode Files { get; private set; } = new();
+    public FilesNode Files { get; internal set; } = new();
 
     /// <summary>
     ///     Gets or sets the parent.
@@ -584,9 +663,9 @@ public class ProjectNode : DataNode, IComparable
     ///     Gets the GUID.
     /// </summary>
     /// <value>The GUID.</value>
-    public Guid Guid { get; private set; }
+    public Guid Guid { get; internal set; }
 
-    public string DebugStartParameters { get; private set; }
+    public string DebugStartParameters { get; internal set; }
 
     #endregion
 }

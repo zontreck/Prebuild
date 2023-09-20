@@ -104,7 +104,7 @@ public class IfContext
     ///     Gets a value indicating whether [ever kept].
     /// </summary>
     /// <value><c>true</c> if [ever kept]; otherwise, <c>false</c>.</value>
-    public bool EverKept { get; private set; }
+    public bool EverKept { get; internal set; }
 
     /// <summary>
     ///     Gets or sets the state.

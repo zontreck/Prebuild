@@ -49,7 +49,18 @@ public class ExcludeNode : DataNode
     public override void Parse(XmlNode node)
     {
         Name = Helper.AttributeValue(node, "name", Name);
-        Name = Helper.AttributeValue(node, "pattern", Name);
+        Pattern = Helper.AttributeValue(node, "pattern", Pattern);
+    }
+
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement main = doc.CreateElement("Exclude");
+        if(Name != null && Name!= "")
+            main.SetAttribute("name", Name);
+        else
+            main.SetAttribute("pattern", Pattern);
+
+        current.AppendChild(main);
     }
 
     #endregion
@@ -60,13 +71,14 @@ public class ExcludeNode : DataNode
     ///     Gets the name.
     /// </summary>
     /// <value>The name.</value>
-    public string Name { get; private set; } = "";
+    public string Name { get; internal set; } = "";
 
     /// <summary>
     ///     Gets the pattern.
     /// </summary>
     /// <value>The pattern.</value>
-    public string Pattern => Name;
+    public string Pattern { get; internal set; } = "";
+
 
     #endregion
 }

@@ -47,7 +47,7 @@ public class ReferencePathNode : DataNode, IComparable
     ///     Gets the path.
     /// </summary>
     /// <value>The path.</value>
-    public string Path { get; private set; }
+    public string Path { get; internal set; }
 
     #endregion
 
@@ -75,6 +75,14 @@ public class ReferencePathNode : DataNode, IComparable
         if (Path == null) Path = "";
 
         Path = Path.Trim();
+    }
+
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement cur = doc.CreateElement("ReferencePath");
+        cur.InnerText = Path;
+
+        current.AppendChild(cur);
     }
 
     #endregion

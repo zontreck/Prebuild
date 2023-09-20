@@ -155,6 +155,21 @@ public class FileNode : DataNode
         }
     }
 
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement main = doc.CreateElement("File");
+        main.SetAttribute("buildAction", BuildAction.ToString());
+        main.SetAttribute("subType", SubType.ToString());
+        main.SetAttribute("resourceName", ResourceName);
+        main.SetAttribute("link", IsLink ? bool.TrueString : bool.FalseString);
+        main.SetAttribute("linkPath", LinkPath);
+        main.SetAttribute("copyToOutput", CopyToOutput.ToString());
+        main.SetAttribute("preservePath", PreservePath ? bool.TrueString : bool.FalseString);
+        main.InnerText = Path;
+
+        current.AppendChild(main);
+    }
+
     #endregion
 
     #region Fields
@@ -168,11 +183,11 @@ public class FileNode : DataNode
 
     /// <summary>
     /// </summary>
-    public string Path { get; private set; }
+    public string Path { get; internal set; }
 
     /// <summary>
     /// </summary>
-    public string ResourceName { get; private set; } = "";
+    public string ResourceName { get; internal set; } = "";
 
     /// <summary>
     /// </summary>
@@ -186,11 +201,11 @@ public class FileNode : DataNode
         }
     }
 
-    public CopyToOutput CopyToOutput { get; private set; } = CopyToOutput.Never;
+    public CopyToOutput CopyToOutput { get; internal set; } = CopyToOutput.Never;
 
-    public bool IsLink { get; private set; }
+    public bool IsLink { get; internal set; }
 
-    public string LinkPath { get; private set; } = string.Empty;
+    public string LinkPath { get; internal set; } = string.Empty;
 
     /// <summary>
     /// </summary>
@@ -206,13 +221,13 @@ public class FileNode : DataNode
 
     /// <summary>
     /// </summary>
-    public bool IsValid { get; private set; }
+    public bool IsValid { get; internal set; }
 
     /// <summary>
     /// </summary>
     /// <param name="file"></param>
     /// <returns></returns>
-    public bool PreservePath { get; private set; }
+    public bool PreservePath { get; internal set; }
 
     #endregion
 }

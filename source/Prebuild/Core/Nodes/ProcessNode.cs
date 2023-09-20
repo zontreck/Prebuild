@@ -61,6 +61,14 @@ public class ProcessNode : DataNode
         }
     }
 
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement proc = doc.CreateElement("Process");
+        proc.InnerText = Path;
+
+        current.AppendChild(proc);
+    }
+
     #endregion
 
     #region Fields
@@ -73,13 +81,13 @@ public class ProcessNode : DataNode
     ///     Gets the path.
     /// </summary>
     /// <value>The path.</value>
-    public string Path { get; private set; }
+    public string Path { get; internal set; }
 
     /// <summary>
     ///     Gets a value indicating whether this instance is valid.
     /// </summary>
     /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
-    public bool IsValid { get; private set; } = true;
+    public bool IsValid { get; internal set; } = true;
 
     #endregion
 }

@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 using Prebuild.Core.Attributes;
 using Prebuild.Core.Utilities;
 
@@ -73,47 +74,48 @@ public class OptionsNode : DataNode
     /// <summary>
     /// </summary>
     [field: OptionNode("OptimizeCode")]
-    public bool OptimizeCode { get; set; }
+    public bool OptimizeCode { get; set; } = true;
 
     /// <summary>
     /// </summary>
     [field: OptionNode("CheckUnderflowOverflow")]
-    public bool CheckUnderflowOverflow { get; set; }
+    public bool CheckUnderflowOverflow { get; set; } = true;
 
     /// <summary>
     /// </summary>
     [field: OptionNode("AllowUnsafe")]
-    public bool AllowUnsafe { get; set; }
+    public bool AllowUnsafe { get; set; } = true;
 
     /// <summary>
     /// </summary>
     [field: OptionNode("PreBuildEvent")]
-    public string PreBuildEvent { get; set; }
+    public string PreBuildEvent { get; set; } = "";
+
 
     /// <summary>
     /// </summary>
     [field: OptionNode("PostBuildEvent")]
-    public string PostBuildEvent { get; set; }
+    public string PostBuildEvent { get; set; } = "";
 
     /// <summary>
     /// </summary>
     [field: OptionNode("PreBuildEventArgs")]
-    public string PreBuildEventArgs { get; set; }
+    public string PreBuildEventArgs { get; set; } = "";
 
     /// <summary>
     /// </summary>
     [field: OptionNode("PostBuildEventArgs")]
-    public string PostBuildEventArgs { get; set; }
+    public string PostBuildEventArgs { get; set; } = "";
 
     /// <summary>
     /// </summary>
     [field: OptionNode("RunPostBuildEvent")]
-    public string RunPostBuildEvent { get; set; }
+    public string RunPostBuildEvent { get; set; } = "";
 
     /// <summary>
     /// </summary>
     [field: OptionNode("RunScript")]
-    public string RunScript { get; set; }
+    public string RunScript { get; set; } = "";
 
     /// <summary>
     /// </summary>
@@ -123,7 +125,7 @@ public class OptionsNode : DataNode
     /// <summary>
     /// </summary>
     [field: OptionNode("WarningsAsErrors")]
-    public bool WarningsAsErrors { get; set; }
+    public bool WarningsAsErrors { get; set; } = false;
 
     /// <summary>
     /// </summary>
@@ -133,7 +135,7 @@ public class OptionsNode : DataNode
     /// <summary>
     /// </summary>
     [field: OptionNode("Prefer32Bit")]
-    public bool Prefer32Bit { get; set; }
+    public bool Prefer32Bit { get; set; } = false;
 
     /// <summary>
     /// </summary>
@@ -171,12 +173,12 @@ public class OptionsNode : DataNode
     /// <summary>
     /// </summary>
     [field: OptionNode("GenerateDocumentation")]
-    public bool GenerateDocumentation { get; set; }
+    public bool GenerateDocumentation { get; set; } = true;
 
     /// <summary>
     /// </summary>
     [field: OptionNode("GenerateXmlDocFile")]
-    public bool GenerateXmlDocFile { get; set; }
+    public bool GenerateXmlDocFile { get; set; } = false;
 
     /// <summary>
     /// </summary>
@@ -191,22 +193,22 @@ public class OptionsNode : DataNode
     /// <summary>
     /// </summary>
     [field: OptionNode("DebugInformation")]
-    public bool DebugInformation { get; set; }
+    public bool DebugInformation { get; set; } = true;
 
     /// <summary>
     /// </summary>
     [field: OptionNode("RegisterComInterop")]
-    public bool RegisterComInterop { get; set; }
+    public bool RegisterComInterop { get; set; } = true;
 
     /// <summary>
     /// </summary>
     [field: OptionNode("RemoveIntegerChecks")]
-    public bool RemoveIntegerChecks { get; set; }
+    public bool RemoveIntegerChecks { get; set; } = false;
 
     /// <summary>
     /// </summary>
     [field: OptionNode("IncrementalBuild")]
-    public bool IncrementalBuild { get; set; }
+    public bool IncrementalBuild { get; set; } = true;
 
     /// <summary>
     /// </summary>
@@ -221,15 +223,17 @@ public class OptionsNode : DataNode
     /// <summary>
     /// </summary>
     [field: OptionNode("NoStdLib")]
-    public bool NoStdLib { get; set; }
+    public bool NoStdLib { get; set; } = false;
 
     [field: OptionNode("UseDependencyFile")]
-    public bool UseDepsFile { get; }
+    public bool UseDepsFile { get; } = true;
 
-    [field: OptionNode("SelfContained")] public bool SelfContained { get; }
+
+    [field: OptionNode("SelfContained")]
+    public bool SelfContained { get; } = true;
 
     [field: OptionNode("UseRuntimeIdentifier")]
-    public bool UseRuntimeIdentifier { get; }
+    public bool UseRuntimeIdentifier { get; } = false;
 
     private readonly List<string> m_FieldsDefined = new();
 
@@ -301,6 +305,21 @@ public class OptionsNode : DataNode
 
         foreach (XmlNode child in node.ChildNodes)
             SetOption(child.Name, Helper.InterpolateForEnvironmentVariables(child.InnerText));
+    }
+
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement options = doc.CreateElement("Options");
+        foreach(var def in m_OptionFields.Keys)
+        {
+            var E = doc.CreateElement(def);
+            E.InnerText = m_OptionFields[def].GetValue(this).ToString();
+
+            options.AppendChild(E);
+        }
+
+        current.AppendChild(options);
+
     }
 
     /// <summary>

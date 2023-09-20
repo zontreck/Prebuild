@@ -48,7 +48,7 @@ public class DescriptionNode : DataNode
     ///     Gets the description Value.
     /// </summary>
     /// <value>The description Value.</value>
-    public string Value { get; private set; }
+    public string Value { get; internal set; }
 
     #endregion
 
@@ -66,6 +66,14 @@ public class DescriptionNode : DataNode
         if (Value == null) Value = "";
 
         Value = Value.Trim();
+    }
+
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement main = doc.CreateElement("Description");
+        main.InnerText = Value;
+
+        current.AppendChild(main);
     }
 
     #endregion

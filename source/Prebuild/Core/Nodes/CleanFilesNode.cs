@@ -45,7 +45,7 @@ public class CleanFilesNode : DataNode
     ///     Gets the signature.
     /// </summary>
     /// <value>The signature.</value>
-    public string Pattern { get; private set; }
+    public string Pattern { get; internal set; }
 
     #endregion
 
@@ -60,8 +60,17 @@ public class CleanFilesNode : DataNode
         if (node == null) throw new ArgumentNullException("node");
 
         Pattern = Helper.AttributeValue(node, "pattern", string.Empty);
-        ;
+        
         Pattern = Pattern.Trim();
+    }
+
+
+    public override void Write(XmlDocument doc, XmlElement current)
+    {
+        XmlElement Clean = doc.CreateElement("CleanFiles");
+        Clean.InnerText = Pattern;
+
+        current.AppendChild (Clean);
     }
 
     #endregion

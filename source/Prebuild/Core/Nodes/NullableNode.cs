@@ -16,5 +16,11 @@ namespace Prebuild.Core.Nodes
         {
             base.Parse(node);
         }
+
+        public override void Write(XmlDocument doc, XmlElement current)
+        {
+            XmlElement nullable = doc.CreateElement("Nullable");
+            current.AppendChild(nullable);
+        }
     }
 }
