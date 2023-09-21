@@ -173,7 +173,7 @@ public class OptionsNode : DataNode
     /// <summary>
     /// </summary>
     [field: OptionNode("GenerateDocumentation")]
-    public bool GenerateDocumentation { get; set; } = true;
+    public bool GenerateDocumentation { get; set; } = false;
 
     /// <summary>
     /// </summary>
@@ -198,7 +198,7 @@ public class OptionsNode : DataNode
     /// <summary>
     /// </summary>
     [field: OptionNode("RegisterComInterop")]
-    public bool RegisterComInterop { get; set; } = true;
+    public bool RegisterComInterop { get; set; } = false;
 
     /// <summary>
     /// </summary>
@@ -208,7 +208,7 @@ public class OptionsNode : DataNode
     /// <summary>
     /// </summary>
     [field: OptionNode("IncrementalBuild")]
-    public bool IncrementalBuild { get; set; } = true;
+    public bool IncrementalBuild { get; set; } = false;
 
     /// <summary>
     /// </summary>
