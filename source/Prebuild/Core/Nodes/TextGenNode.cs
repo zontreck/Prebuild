@@ -45,12 +45,16 @@ namespace Prebuild.Core.Nodes
             {
                 // Add to the extension: Bottle.cs
                 // This is to aid in excluding these files from git
-
-                m_OutputName = Path.ChangeExtension(m_OutputName, ".Bottle.cs");
+                string desiredExtension = Path.GetExtension(OutputName);
+                m_OutputName = Path.ChangeExtension(m_OutputName, ".Bottle" + desiredExtension);
 
 
             }
-            else m_OutputName = Path.ChangeExtension(m_OutputName, ".SnapWrap.cs");
+            else
+            {
+                string desiredExtension = Path.GetExtension(OutputName);
+                m_OutputName = Path.ChangeExtension(m_OutputName, ".SnapWrap" + desiredExtension);
+            }
 
         }
 
