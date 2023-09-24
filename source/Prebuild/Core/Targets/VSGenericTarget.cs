@@ -734,7 +734,7 @@ public abstract class VSGenericTarget : ITarget
         var postbuild = string.Empty;
         using (ps)
         {
-            ps.WriteLine("<Project Sdk=\"Microsoft.NET.Sdk\">");
+            ps.WriteLine($"<Project Sdk=\"{project.SDK}\">");
             ps.WriteLine();
 
             ps.WriteLine("  <PropertyGroup>");

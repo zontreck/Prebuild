@@ -178,6 +178,7 @@ public class ProjectNode : DataNode, IComparable
     public override void Parse(XmlNode node)
     {
         Name = Helper.AttributeValue(node, "name", Name);
+        SDK = Helper.AttributeValue(node, "sdk", SDK);
         Path = Helper.AttributeValue(node, "path", Path);
         FilterGroups = Helper.AttributeValue(node, "filterGroups", FilterGroups);
         Version = Helper.AttributeValue(node, "version", Version);
@@ -266,6 +267,7 @@ public class ProjectNode : DataNode, IComparable
         XmlElement proj = doc.CreateElement("Project");
 
         proj.SetAttribute("name", Name);
+        proj.SetAttribute("sdk", SDK);
         proj.SetAttribute("path", Path);
         proj.SetAttribute("filterGroups", FilterGroups);
         proj.SetAttribute("version", Version);
@@ -383,6 +385,11 @@ public class ProjectNode : DataNode, IComparable
     /// </summary>
     /// <value>The name.</value>
     public string Name { get; internal set; } = "unknown";
+
+    /// <summary>
+    /// Project SDK
+    /// </summary>
+    public string SDK { get; internal set; } = "Microsoft.NET.Sdk";
 
     /// <summary>
     /// Contains settings for DotNet Maui (7.0+)
