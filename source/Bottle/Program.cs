@@ -52,10 +52,19 @@ namespace Bottle
 
                 // Retrieve namespace name, first value in json
                 var ns = node["namespace"].AsValue();
+
+                bool bUseConsts = false;
+                if(node.ContainsKey("useConsts"))
+                {
+                    var UseConsts = node["useConsts"].AsValue();
+                    bUseConsts = bool.Parse(UseConsts.ToString());
+                }
+
+
                 bw.WriteLine($"namespace {ns}");
                 bw.WriteLine("{");
 
-                loop(node["data"], bw, 1);
+                loop(node["data"], bw, 1, bUseConsts);
 
 
                 bw.WriteLine("}");
@@ -69,13 +78,13 @@ namespace Bottle
             }
         }
 
-        public static void loop(JsonNode? node, StringWriter writer, int indent = 0)
+        public static void loop(JsonNode? node, StringWriter writer, int indent = 0, bool useConsts = false)
         {
             foreach (KeyValuePair<string, JsonNode> kvp in node.AsObject())
             {
                 if(kvp.Value is JsonValue value)
                 {
-                    writer.WriteLine(doPutValue(kvp.Key, value, indent));
+                    writer.WriteLine(doPutValue(kvp.Key, value, indent, useConsts));
                 } else if(kvp.Value is JsonObject obj)
                 {
                     writer.WriteLine($"{indents(indent)}public static class {kvp.Key}");
@@ -93,31 +102,42 @@ namespace Bottle
             return "".PadLeft(count*4);
         }
 
-        public static string doPutValue(string key, JsonValue value, int indent)
+        public static string setor(bool test, string a, string b)
+        {
+            if (test)
+            {
+                return a;
+            }
+            return b;
+        }
+
+        public static string doPutValue(string key, JsonValue value, int indent, bool useConsts = false)
         {
             StringBuilder builder = new();
+            string Const = "const";
+            string Static = "static";
 
             if (value.TryGetValue(out int int1))
             {
-                builder.AppendLine($"{indents(indent)}public static int {key} => {int1};");
+                builder.AppendLine($"{indents(indent)}public {setor(useConsts, Const, Static)} int {key} => {int1};");
             } else if (value.TryGetValue(out string str1))
             {
-                builder.AppendLine($"{indents(indent)}public static string {key} => \"{str1}\";");
+                builder.AppendLine($"{indents(indent)}public {setor(useConsts, Const, Static)} string {key} => \"{str1}\";");
             } else if (value.TryGetValue(out bool bool1))
             {
-                builder.AppendLine($"{indents(indent)}public static bool {key} => {bool2String(bool1)};");
+                builder.AppendLine($"{indents(indent)}public {setor(useConsts, Const, Static)} bool {key} => {bool2String(bool1)};");
             } else if (value.TryGetValue(out float f1))
             {
-                builder.AppendLine($"{indents(indent)}public static float {key} => {f1}f;");
+                builder.AppendLine($"{indents(indent)}public {setor(useConsts, Const, Static)} float {key} => {f1}f;");
             } else if (value.TryGetValue(out double d1))
             {
-                builder.AppendLine($"{indents(indent)}public static double {key} => {d1};");
+                builder.AppendLine($"{indents(indent)}public {setor(useConsts, Const, Static)} double {key} => {d1};");
             } else if (value.TryGetValue(out byte b1))
             {
-                builder.AppendLine($"{indents(indent)}public static byte {key} => {b1};");
+                builder.AppendLine($"{indents(indent)}public {setor(useConsts, Const, Static)} byte {key} => {b1};");
             } else if (value.TryGetValue(out long l1))
             {
-                builder.AppendLine($"{indents(indent)}public static long {key} => {l1}L;");
+                builder.AppendLine($"{indents(indent)}public {setor(useConsts, Const, Static)} long {key} => {l1}L;");
             }
 
             return builder.ToString();
