@@ -792,7 +792,9 @@ public abstract class VSGenericTarget : ITarget
 
                 if (OperatingSystem.IsMacOS()) RID = "macos-x64";
 
-                ps.WriteLine($"<RuntimeIdentifier>{RID}</RuntimeIdentifier>");
+                if (!kernel.CommandLine.WasPassed("rid"))
+                    ps.WriteLine($"<RuntimeIdentifier>{RID}</RuntimeIdentifier>");
+                else ps.WriteLine($"<RuntimeIdentifier>{kernel.CommandLine["rid"]}</RuntimeIdentifier>");
             }
 
             ps.WriteLine("  </PropertyGroup>");
