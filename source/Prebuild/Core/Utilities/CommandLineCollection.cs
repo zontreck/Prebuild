@@ -41,9 +41,10 @@ public class CommandLineCollection : IEnumerable<KeyValuePair<string, string>>
     /// <summary>
     ///     Create a new CommandLine instance and set some internal variables.
     /// </summary>
-    public CommandLineCollection(string[] args)
+    public CommandLineCollection(string[] args, bool useTackInsteadOfSlash=false)
     {
         m_RawArgs = args;
+        ArgSymbol = useTackInsteadOfSlash ? '-' : '/';
 
         Parse();
     }
@@ -84,7 +85,7 @@ public class CommandLineCollection : IEnumerable<KeyValuePair<string, string>>
         {
             var arg = m_RawArgs[idx];
 
-            if (arg.Length > 2 && arg[0] == '/')
+            if (arg.Length > 2 && arg[0] == ArgSymbol)
             {
                 arg = arg.Substring(1);
                 lastArg = arg;
@@ -123,6 +124,11 @@ public class CommandLineCollection : IEnumerable<KeyValuePair<string, string>>
 
     // The raw OS arguments
     private readonly string[] m_RawArgs;
+
+    /// <summary>
+    /// Argument symbol for parsing
+    /// </summary>
+    private readonly char ArgSymbol;
 
     // Command-line argument storage
     private readonly Dictionary<string, string> m_Arguments = new();
